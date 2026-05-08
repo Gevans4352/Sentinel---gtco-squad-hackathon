@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sentinel — Trust Monitor</title>
+  <link rel="stylesheet" href="index.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="grid-bg"></div>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-mark">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <path d="M11 1L20 6V16L11 21L2 16V6L11 1Z" stroke="var(--teal)" stroke-width="1.5" fill="none"/>
+          <path d="M11 5L17 8.5V15.5L11 19L5 15.5V8.5L11 5Z" fill="var(--teal)" opacity="0.15"/>
+          <circle cx="11" cy="11" r="2" fill="var(--teal)"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-name">SENTINEL</span>
+        <span class="logo-sub">Trust Monitor</span>
+      </div>
+    </div>
+    <div class="header-mid">
+      <div class="merchant-chip">
+        <span class="chip-dot"></span>
+        <span>Adaeze's Fashion Hub</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="conn-pill" id="conn-pill">
+        <span class="conn-dot" id="conn-dot"></span>
+        <span id="conn-label">Demo Mode</span>
+      </div>
+      <div class="last-txn">Last: <span id="last-time">—</span></div>
+      <button class="icon-btn" onclick="toggleSettings()" title="Settings">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+  <div class="demo-ribbon" id="demo-ribbon">
+    <span class="ribbon-dot"></span>
+    <span>DEMO MODE — Simulated transactions active</span>
+    <button onclick="toggleDemo()" id="demo-btn">Disable</button>
+  </div>
+  <main class="main">
+    <aside class="sidebar">
+      <div class="kpi-stack">
+        <div class="kpi" id="kpi-total-card">
+          <div class="kpi-eyebrow">Transactions</div>
+          <div class="kpi-number teal" id="kpi-total">142</div>
+          <div class="kpi-label">Today</div>
+          <div class="kpi-bar"><div class="kpi-fill teal-fill" style="width:71%"></div></div>
+        </div>
+        <div class="kpi-divider"></div>
+        <div class="kpi" id="kpi-flagged-card">
+          <div class="kpi-eyebrow">Flagged</div>
+          <div class="kpi-number amber" id="kpi-flagged">8</div>
+          <div class="kpi-label">Pending Review</div>
+          <div class="kpi-bar"><div class="kpi-fill amber-fill" style="width:20%"></div></div>
+        </div>
+        <div class="kpi-divider"></div>
+        <div class="kpi" id="kpi-blocked-card">
+          <div class="kpi-eyebrow">Blocked</div>
+          <div class="kpi-number crimson" id="kpi-blocked">3</div>
+          <div class="kpi-label">Auto-Blocked</div>
+          <div class="kpi-bar"><div class="kpi-fill crimson-fill" style="width:8%"></div></div>
+        </div>
+        <div class="kpi-divider"></div>
+        <div class="kpi" id="kpi-saved-card">
+          <div class="kpi-eyebrow">Prevented</div>
+          <div class="kpi-number jade" id="kpi-saved">₦285k</div>
+          <div class="kpi-label">Fraud Losses Saved</div>
+          <div class="kpi-bar"><div class="kpi-fill jade-fill" style="width:55%"></div></div>
+        </div>
+      </div>
+
+      <!-- CHART IN SIDEBAR -->
+      <div class="sidebar-chart">
+        <div class="chart-eyebrow">Trust Score Trend <span class="chart-period">24h</span></div>
+        <div class="chart-canvas-wrap">
+          <canvas id="trendChart"></canvas>
+        </div>
+        <div class="chart-legend">
+          <span><i class="leg-dot jade-dot"></i>Safe</span>
+          <span><i class="leg-dot amber-dot"></i>Review</span>
+          <span><i class="leg-dot crimson-dot"></i>Fraud</span>
+        </div>
+      </div>
+      <div class="sim-panel">
+        <div class="sim-eyebrow">Simulate</div>
+        <div class="sim-btns">
+          <button class="sim-btn s-red"    onclick="simulateRed()">RED</button>
+          <button class="sim-btn s-amber"  onclick="simulateAmber()">AMBER</button>
+          <button class="sim-btn s-green"  onclick="simulateGreen()">GREEN</button>
+        </div>
+      </div>
+    </aside>
+    <section class="content">
+      <div class="feed-panel">
+        <div class="panel-header">
+          <div class="panel-title">Live Transaction Feed</div>
+          <div class="panel-meta" id="feed-meta">Showing last 50</div>
+        </div>
+        <div class="table-scroll">
+          <table class="txn-table">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Amount</th>
+                <th>Customer</th>
+                <th>AI Score</th>
+                <th>Tier</th>
+                <th>Risk Signals</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="txn-body"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="feed-panel disputes-panel">
+        <div class="panel-header" onclick="toggleDisputes()" style="cursor:pointer">
+          <div class="panel-title">
+            Disputes
+            <span class="open-badge" id="open-badge">2 open</span>
+          </div>
+          <div class="panel-meta">
+            <span id="disputes-chevron" class="chevron">▾</span>
+          </div>
+        </div>
+        <div id="disputes-body">
+          <div class="table-scroll">
+            <table class="txn-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Ref</th>
+                  <th>Amount</th>
+                  <th>Reason</th>
+                  <th>AI Score</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="disputes-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div class="drawer-overlay" id="drawer-overlay" onclick="toggleSettings()"></div>
+  <div class="drawer" id="drawer">
+    <div class="drawer-head">
+      <span>Settings</span>
+      <button onclick="toggleSettings()">✕</button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-row">
+        <span>Block Threshold</span>
+        <div class="slider-row">
+          <input type="range" min="0" max="100" value="70" id="thresh-slider" oninput="document.getElementById('thresh-val').textContent=this.value"/>
+          <span id="thresh-val">70</span>
+        </div>
+      </div>
+      <div class="drawer-row"><span>AMBER Alerts</span><label class="tog"><input type="checkbox" checked/><span class="tog-track"></span></label></div>
+      <div class="drawer-row"><span>Auto-Refund RED</span><label class="tog"><input type="checkbox" checked/><span class="tog-track"></span></label></div>
+      <div class="drawer-row"><span>SMS Alerts</span><label class="tog"><input type="checkbox"/><span class="tog-track"></span></label></div>
+    </div>
+  </div>
+  <div id="toasts"></div>
+  <div id="modal-mount"></div>
+  <script src="index.js"></script>
+  <script src="simulate.js"></script>
+</body>
+</html>
