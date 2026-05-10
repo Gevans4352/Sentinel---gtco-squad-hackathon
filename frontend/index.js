@@ -38,54 +38,6 @@ const RSN = {
   ANOMALY_DETECTED:'ML model anomaly flag',
 };
 
-// DEMO SIMULATION FUNCTIONS
-function simulateRed() {
-  const newTxn = {
-    ref: 'SQT-' + Math.floor(Math.random() * 9000 + 9000),
-    time: nowTime(),
-    amount: Math.floor(Math.random() * 500000 + 100000),
-    email: 'risk***@suspicious.com',
-    score: Math.floor(Math.random() * 30 + 70),
-    tier: 'RED',
-    codes: ['HIGH_VELOCITY', 'OFF_HOURS'].slice(0, Math.floor(Math.random() * 2) + 1),
-    status: 'blocked',
-    model_trained: true,
-    features: { amount_vs_avg: Math.random() * 6 + 3, velocity_1hr: Math.floor(Math.random() * 5 + 2), hour_of_day: Math.random() * 24 }
-  };
-  pushTransaction(newTxn);
-}
-
-function simulateAmber() {
-  const newTxn = {
-    ref: 'SQT-' + Math.floor(Math.random() * 9000 + 9000),
-    time: nowTime(),
-    amount: Math.floor(Math.random() * 100000 + 10000),
-    email: 'review***@customer.com',
-    score: Math.floor(Math.random() * 40 + 30),
-    tier: 'AMBER',
-    codes: ['AMOUNT_SPIKE', 'NEW_DEVICE'].slice(0, Math.floor(Math.random() * 2) + 1),
-    status: 'flagged',
-    model_trained: true,
-    features: { amount_vs_avg: Math.random() * 3 + 1, velocity_1hr: Math.floor(Math.random() * 3), hour_of_day: Math.random() * 24 }
-  };
-  pushTransaction(newTxn);
-}
-
-function simulateGreen() {
-  const newTxn = {
-    ref: 'SQT-' + Math.floor(Math.random() * 9000 + 9000),
-    time: nowTime(),
-    amount: Math.floor(Math.random() * 50000 + 1000),
-    email: 'legit***@verified.com',
-    score: Math.floor(Math.random() * 30),
-    tier: 'GREEN',
-    codes: [],
-    status: 'approved',
-    model_trained: true,
-    features: { amount_vs_avg: Math.random() * 0.8, velocity_1hr: 0, hour_of_day: Math.random() * 24 }
-  };
-  pushTransaction(newTxn);
-}
 
 //BOOT
 document.addEventListener('DOMContentLoaded', () => {
@@ -663,7 +615,7 @@ function nudgeChart(score) {
 //SOCKET
 function initSocket() {
   if (typeof io !== 'undefined') {
-    const socket = io('http://localhost:3000');
+    const socket = io();
     socket.on('connect', () => {
       document.getElementById('conn-dot').className = 'conn-dot live';
       document.getElementById('conn-label').textContent = 'Live';
@@ -688,7 +640,7 @@ function startDemo() {
     if (r < 0.18) simulateRed();
     else if (r < 0.45) simulateAmber();
     else simulateGreen();
-  }, 4000);
+  }, 15000);
 }
 
 function toggleDemo() {
