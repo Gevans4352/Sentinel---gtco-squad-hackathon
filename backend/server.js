@@ -61,3 +61,15 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Sentinel running on http://localhost:${PORT}`);
 });
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`[Server] Port ${PORT} is busy — retrying in 2 s...`);
+    setTimeout(() => {
+      server.close();
+      server.listen(PORT);
+    }, 2000);
+  } else {
+    throw err;
+  }
+});
