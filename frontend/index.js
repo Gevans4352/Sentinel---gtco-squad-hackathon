@@ -7,19 +7,19 @@ const S = {
 };
 
 const SEED = [
-  { ref:'SQT-8821', time:'14:38:12', amount:420000, email:'f***@gmail.com',   score:91, tier:'RED',   codes:['HIGH_VELOCITY','OFF_HOURS'],             status:'blocked',  model_trained:true,  features:{amount_vs_avg:4.2,velocity_1hr:4,hour_of_day:2}  },
-  { ref:'SQT-8820', time:'14:37:55', amount:15500,  email:'n***@yahoo.com',   score:58, tier:'AMBER', codes:['AMOUNT_SPIKE'],                           status:'flagged',  model_trained:true,  features:{amount_vs_avg:2.1,velocity_1hr:1,hour_of_day:14} },
-  { ref:'SQT-8819', time:'14:37:20', amount:8200,   email:'k***@hotmail.com', score:12, tier:'GREEN', codes:[],                                         status:'approved', model_trained:true,  features:{amount_vs_avg:0.8,velocity_1hr:0,hour_of_day:14} },
-  { ref:'SQT-8818', time:'14:36:40', amount:210000, email:'x***@gmail.com',   score:87, tier:'RED',   codes:['HIGH_VELOCITY','OFF_HOURS','AMOUNT_SPIKE'],status:'blocked',  model_trained:false, features:{amount_vs_avg:5.1,velocity_1hr:5,hour_of_day:3}  },
-  { ref:'SQT-8817', time:'14:35:10', amount:5000,   email:'j***@gmail.com',   score:22, tier:'GREEN', codes:[],                                         status:'approved', model_trained:true,  features:{amount_vs_avg:0.5,velocity_1hr:0,hour_of_day:11} },
-  { ref:'SQT-8816', time:'14:34:50', amount:75000,  email:'m***@live.com',    score:45, tier:'AMBER', codes:['NEW_DEVICE'],                             status:'flagged',  model_trained:true,  features:{amount_vs_avg:1.8,velocity_1hr:1,hour_of_day:13} },
-  { ref:'SQT-8815', time:'14:33:20', amount:12000,  email:'a***@gmail.com',   score:18, tier:'GREEN', codes:[],                                         status:'approved', model_trained:true,  features:{amount_vs_avg:1.0,velocity_1hr:0,hour_of_day:13} },
-  { ref:'SQT-8814', time:'14:32:05', amount:340000, email:'q***@yahoo.com',   score:79, tier:'RED',   codes:['ANOMALY_DETECTED'],                       status:'blocked',  model_trained:true,  features:{amount_vs_avg:3.8,velocity_1hr:2,hour_of_day:1}  },
+  { ref:'SQT-8821', time:'14:38:12', amount:42000000,  email:'f***@gmail.com',   score:91, tier:'RED',   codes:['HIGH_VELOCITY','OFF_HOURS'],              status:'blocked',  model_trained:true,  features:{amount_vs_avg:4.2,velocity_1hr:4,hour_of_day:2}  },
+  { ref:'SQT-8820', time:'14:37:55', amount:1550000,   email:'n***@yahoo.com',   score:58, tier:'AMBER', codes:['AMOUNT_SPIKE'],                            status:'flagged',  model_trained:true,  features:{amount_vs_avg:2.1,velocity_1hr:1,hour_of_day:14} },
+  { ref:'SQT-8819', time:'14:37:20', amount:820000,    email:'k***@hotmail.com', score:12, tier:'GREEN', codes:[],                                          status:'approved', model_trained:true,  features:{amount_vs_avg:0.8,velocity_1hr:0,hour_of_day:14} },
+  { ref:'SQT-8818', time:'14:36:40', amount:21000000,  email:'x***@gmail.com',   score:87, tier:'RED',   codes:['HIGH_VELOCITY','OFF_HOURS','AMOUNT_SPIKE'], status:'blocked',  model_trained:false, features:{amount_vs_avg:5.1,velocity_1hr:5,hour_of_day:3}  },
+  { ref:'SQT-8817', time:'14:35:10', amount:500000,    email:'j***@gmail.com',   score:22, tier:'GREEN', codes:[],                                          status:'approved', model_trained:true,  features:{amount_vs_avg:0.5,velocity_1hr:0,hour_of_day:11} },
+  { ref:'SQT-8816', time:'14:34:50', amount:7500000,   email:'m***@live.com',    score:45, tier:'AMBER', codes:['NEW_DEVICE'],                              status:'flagged',  model_trained:true,  features:{amount_vs_avg:1.8,velocity_1hr:1,hour_of_day:13} },
+  { ref:'SQT-8815', time:'14:33:20', amount:1200000,   email:'a***@gmail.com',   score:18, tier:'GREEN', codes:[],                                          status:'approved', model_trained:true,  features:{amount_vs_avg:1.0,velocity_1hr:0,hour_of_day:13} },
+  { ref:'SQT-8814', time:'14:32:05', amount:34000000,  email:'q***@yahoo.com',   score:79, tier:'RED',   codes:['ANOMALY_DETECTED'],                        status:'blocked',  model_trained:true,  features:{amount_vs_avg:3.8,velocity_1hr:2,hour_of_day:1}  },
 ];
 
 const SEED_DSP = [
-  { id:'DSP-001', ref:'SQT-8821', amount:420000, reason:'Unauthorized transaction', score:91, status:'open' },
-  { id:'DSP-002', ref:'SQT-8818', amount:210000, reason:'Item not received',        score:87, status:'open' },
+  { id:'DSP-001', ref:'SQT-8821', amount:42000000, reason:'Unauthorized transaction', score:91, status:'open' },
+  { id:'DSP-002', ref:'SQT-8818', amount:21000000, reason:'Item not received',        score:87, status:'open' },
 ];
 
 const RSN = {
@@ -60,11 +60,12 @@ function toggleSidebar() {
 }
 
 //UTILS
-const money   = n => '₦' + Number(n).toLocaleString();
+const money   = n => '₦' + (Number(n) / 100).toLocaleString();
 const scCol   = s => s < 31 ? 'var(--jade)' : s < 71 ? 'var(--amber)' : 'var(--crimson)';
 const pillCls = t => t==='GREEN'?'pill-g':t==='AMBER'?'pill-a':'pill-r';
 const rowCls  = t => t==='GREEN'?'row-g':t==='AMBER'?'row-a':'row-r';
 function nowTime() { return new Date().toTimeString().slice(0,8); }
+function fmtTime(iso) { return iso ? new Date(iso).toLocaleTimeString('en-GB').slice(0,8) : '—'; }
 
 //FEED
 function renderFeed() {
@@ -75,22 +76,24 @@ function renderFeed() {
 }
 
 function buildRow(t, anim) {
-  const codes = t.codes.length
-    ? t.codes.map(c=>`<span class="sig">${c}</span>`).join('')
+  const _reasons = t.reasons || t.codes || [];
+  const codes = _reasons.length
+    ? _reasons.map(c=>`<span class="sig">${c}</span>`).join('')
     : `<span style="color:var(--t3);font-family:var(--ff-mono);font-size:10px">—</span>`;
 
-  const status = t.status==='approved'
+  const _status = t.status || (t.tier==='GREEN'?'approved':t.tier==='AMBER'?'flagged':'blocked');
+  const status = _status==='approved'
     ? `<span class="st-ok">● APPROVED</span>`
-    : t.status==='flagged'
+    : _status==='flagged'
     ? `<span class="st-fl">◆ FLAGGED</span>`
     : `<span class="st-blk">■ BLOCKED</span>`;
 
-  const action = (t.tier==='AMBER' && t.status==='flagged')
+  const action = (t.tier==='AMBER' && _status==='flagged')
     ? `<button class="tbl-btn tb-rv" onclick="event.stopPropagation();openModal('${t.ref}')">REVIEW</button>`
     : '';
 
   return `<tr class="${rowCls(t.tier)} ${anim?'slide-in':''}" onclick="openModal('${t.ref}')">
-    <td class="tc-time">${t.time}</td>
+    <td class="tc-time">${t.time || fmtTime(t.timestamp)}</td>
     <td class="tc-amt">${money(t.amount)}</td>
     <td class="tc-email">${t.email}</td>
     <td>
@@ -107,14 +110,20 @@ function buildRow(t, anim) {
 }
 
 function pushTransaction(t) {
+  // Guard against double-push (e.g. socket event + local call for same ref).
+  if (S.transactions.some(x => x.ref === t.ref)) return;
+  // Normalise fields that backend doesn't send so the rest of the UI never crashes.
+  if (!t.time)   t.time   = fmtTime(t.timestamp);
+  if (!t.status) t.status = t.tier==='GREEN'?'approved':t.tier==='AMBER'?'flagged':'blocked';
+  if (!t.codes)  t.codes  = t.reasons || [];
   S.transactions.unshift(t);
   S.total++;
   if (t.tier==='AMBER') { S.flagged++;  bumpKPI('kpi-flagged-card','kpi-flagged'); }
-  if (t.tier==='RED')   { S.blocked++;  bumpKPI('kpi-blocked-card','kpi-blocked'); S.saved+=t.amount; bumpKPI('kpi-saved-card','kpi-saved'); }
+  if (t.tier==='RED')   { S.blocked++;  bumpKPI('kpi-blocked-card','kpi-blocked'); S.saved+=Math.round(t.amount/100); bumpKPI('kpi-saved-card','kpi-saved'); }
   bumpKPI('kpi-total-card','kpi-total');
   syncKPIs();
   nudgeChart(t.score);
-  document.getElementById('last-time').textContent = t.time;
+  document.getElementById('last-time').textContent = t.time || fmtTime(t.timestamp);
 
   const tbody = document.getElementById('txn-body');
   const tmp = document.createElement('tbody');
@@ -162,12 +171,13 @@ function openModal(ref) {
   const t = S.transactions.find(x=>x.ref===ref);
   if (!t) return;
   const col = scCol(t.score);
-  const mtag = t.model_trained
+  const mtag = t.model_trained !== false
     ? `<span class="m-tag on">● AI MODEL ACTIVE</span>`
     : `<span class="m-tag off">◌ LEARNING MODE</span>`;
 
-  const reasons = t.codes.length
-    ? t.codes.map(c=>`<div class="rsn-row"><span class="rsn-code" style="color:${col}">${c}</span><span class="rsn-desc">${RSN[c]||'Risk signal triggered'}</span></div>`).join('')
+  const _rc = t.reasons || t.codes || [];
+  const reasons = _rc.length
+    ? _rc.map(c=>`<div class="rsn-row"><span class="rsn-code" style="color:${col}">${c}</span><span class="rsn-desc">${RSN[c]||'Risk signal triggered'}</span></div>`).join('')
     : `<div style="color:var(--jade);font-family:var(--ff-mono);font-size:11px;padding:6px 0">No risk signals</div>`;
 
   const feats = t.features ? Object.entries(t.features).map(([k,v])=>{
@@ -192,9 +202,9 @@ function openModal(ref) {
           <div><div class="m-sec-lbl">Basic Info</div>
             <div class="i2col">
               <div class="ibox"><div class="ibox-lbl">Amount</div><div class="ibox-val">${money(t.amount)}</div></div>
-              <div class="ibox"><div class="ibox-lbl">Time</div><div class="ibox-val">${t.time}</div></div>
+              <div class="ibox"><div class="ibox-lbl">Time</div><div class="ibox-val">${t.time || fmtTime(t.timestamp)}</div></div>
               <div class="ibox"><div class="ibox-lbl">Customer</div><div class="ibox-val">${t.email}</div></div>
-              <div class="ibox"><div class="ibox-lbl">Status</div><div class="ibox-val">${t.status.toUpperCase()}</div></div>
+              <div class="ibox"><div class="ibox-lbl">Status</div><div class="ibox-val">${(t.status||(t.tier==='GREEN'?'approved':t.tier==='AMBER'?'flagged':'blocked')).toUpperCase()}</div></div>
             </div></div>
           <div><div class="m-sec-lbl">AI Trust Score</div>
             <div class="gauge-row">
@@ -242,8 +252,8 @@ function disputeModal(ref) {
             <div class="evid-ttl">■ Sentinel AI Evidence Package</div>
             <div class="evid-body">
               Trust Score: <strong style="color:var(--crimson)">${t.score}/100 — HIGH RISK</strong><br/>
-              Signals: <strong>${t.codes.join(' + ')||'ANOMALY_DETECTED'}</strong><br/>
-              Model: <strong>${t.model_trained?'Isolation Forest (trained)':'Heuristic fallback'}</strong><br/>
+              Signals: <strong>${(t.reasons||t.codes||[]).join(' + ')||'ANOMALY_DETECTED'}</strong><br/>
+              Model: <strong>${t.model_trained!==false?'Rule Engine + Z-Score + Isolation Forest':'Heuristic fallback'}</strong><br/>
               Deviation: <strong>${t.features?.amount_vs_avg??'—'}× above customer avg</strong>
             </div>
           </div>
@@ -349,12 +359,16 @@ function nudgeChart(score) {
 
 //SOCKET
 function initSocket() {
-  /*
-  const socket = io('http://localhost:3000');
-  socket.on('connect',()=>{ document.getElementById('conn-dot').className='conn-dot live'; document.getElementById('conn-label').textContent='Live'; });
-  socket.on('disconnect',()=>{ document.getElementById('conn-dot').className='conn-dot error'; document.getElementById('conn-label').textContent='Disconnected'; });
+  const socket = io();
+  socket.on('connect', () => {
+    document.getElementById('conn-dot').className = 'conn-dot live';
+    document.getElementById('conn-label').textContent = 'Live';
+  });
+  socket.on('disconnect', () => {
+    document.getElementById('conn-dot').className = 'conn-dot error';
+    document.getElementById('conn-label').textContent = 'Disconnected';
+  });
   socket.on('new_transaction', pushTransaction);
-  */
 }
 
 //DEMO 
@@ -364,7 +378,7 @@ function startDemo() {
     if (r<.18) simulateRed();
     else if (r<.45) simulateAmber();
     else simulateGreen();
-  }, 4000);
+  }, 15000);
 }
 
 function toggleDemo() {

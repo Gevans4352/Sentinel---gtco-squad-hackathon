@@ -1,0 +1,4 @@
+{
+  "ignore": ["ml/", "*.sqlite", "*.sqlite-wal", "*.sqlite-shm", "*.csv"],
+  "delay": 1000
+}
