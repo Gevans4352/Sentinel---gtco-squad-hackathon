@@ -8,6 +8,10 @@ const db = require('./db/database');
 const { receiveWebhook } = require('./webhook/receiver');
 const squadApi = require('./squad-client/api');
 
+// ── Global safety net — prevents any single unhandled error from killing the process ──
+process.on('uncaughtException',  (err) => console.error('[Sentinel] uncaughtException:', err.message));
+process.on('unhandledRejection', (err) => console.error('[Sentinel] unhandledRejection:', err?.message ?? err));
+
 // ── App + server setup ────────────────────────────────────────────────────────
 const app = express();
 const server = http.createServer(app);
@@ -24,7 +28,10 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 app.post(
   '/webhook/squad',
   express.raw({ type: 'application/json' }),
-  (req, res) => receiveWebhook(req, res, db, io)
+  (req, res) => receiveWebhook(req, res, db, io).catch((err) => {
+    console.error('[Webhook] unhandled error:', err.message);
+    res.status(500).json({ error: 'Internal error' });
+  })
 );
 
 // ── JSON middleware + REST API (after webhook route) ──────────────────────────

@@ -2,8 +2,10 @@
 // Randomised realistic transaction pools. Each call picks from pools so
 // every simulated event looks different in the dashboard.
 
-let _simCount = 900 + Math.floor(Math.random() * 50); // start near SQT-9xx
-function _ref() { return 'SQT-' + (++_simCount); }
+// Timestamp + counter so refs are always unique across page reloads and sessions.
+const _epoch = Date.now();
+let _simCount = 0;
+function _ref() { return 'SIM-' + _epoch + '-' + (++_simCount); }
 
 function _post(payload) {
   fetch('/webhook/squad', {
