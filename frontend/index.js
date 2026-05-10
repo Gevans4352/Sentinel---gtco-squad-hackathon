@@ -94,6 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
   renderFeed();
   renderDisputes();
   syncKPIs();
+  S.transactions.forEach(t => { if (t.tier === 'RED') t._notifRead = false; });
+  updateNotifBadge();
   buildChart();
   initSocket();
   startDemo();
@@ -116,6 +118,77 @@ function toggleSidebar() {
   }
   setTimeout(() => { if (chart) chart.resize(); }, 320);
 }
+
+//NOTIFICATIONS
+function toggleNotifications() {
+  const panel = document.getElementById('notif-panel');
+  const isOpen = panel.classList.toggle('open');
+  if (isOpen) renderNotifications();
+}
+
+function updateNotifBadge() {
+  const badge = document.getElementById('notif-badge');
+  const wrap = document.querySelector('.notif-wrap');
+  const reds = S.transactions.filter(t => t.tier === 'RED' && !t._notifRead);
+  
+  document.getElementById('notif-count').textContent = reds.length;
+  
+  if (reds.length > 0) {
+    badge.textContent = reds.length > 99 ? '99+' : reds.length;
+    badge.style.display = 'flex';
+    wrap?.classList.add('has-alert');
+  } else {
+    badge.style.display = 'none';
+    wrap?.classList.remove('has-alert');
+  }
+}
+
+function triggerNotifAlert() {
+  const wrap = document.querySelector('.notif-wrap');
+  wrap?.classList.add('notif-bump');
+  setTimeout(() => wrap?.classList.remove('notif-bump'), 600);
+}
+
+function renderNotifications() {
+  const list = document.getElementById('notif-list');
+  const markall = document.getElementById('notif-markall');
+  const reds = S.transactions.filter(t => t.tier === 'RED' && !t._notifRead);
+  
+  if (!reds.length) {
+    list.innerHTML = '<div class="notif-empty">No critical alerts</div>';
+    markall?.classList.add('hidden');
+    return;
+  }
+  
+  markall?.classList.remove('hidden');
+  list.innerHTML = reds.map(t => `
+    <div class="notif-item" onclick="event.stopPropagation(); toggleNotifications(); openModal('${t.ref}');">
+      <div class="notif-top">
+        <div class="notif-title">${t.status === 'blocked' ? 'High Risk Transaction Blocked' : 'Critical Risk Detected'}</div>
+        <div class="notif-time">${t.time || fmtTime(t.timestamp)}</div>
+      </div>
+      <div class="notif-meta">
+        ${money(t.amount)} &nbsp;•&nbsp; Score: <strong style="color:#ef4444">${t.score}</strong>
+      </div>
+      <div class="notif-tags">
+        ${(t.codes || []).map(c => `<span class="notif-tag">${c}</span>`).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function markAllNotifsRead() {
+  S.transactions.forEach(t => { if (t.tier === 'RED') t._notifRead = true; });
+  updateNotifBadge();
+  renderNotifications();
+}
+
+document.addEventListener('click', (e) => {
+  const wrap = document.querySelector('.notif-wrap');
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('notif-panel')?.classList.remove('open');
+  }
+});
 
 //UTILS - FIXED money() function
 const money = n => '₦' + Number(n).toLocaleString();
@@ -176,7 +249,7 @@ function pushTransaction(t) {
   if (!t.time) t.time = fmtTime(t.timestamp);
   if (!t.status) t.status = t.tier === 'GREEN' ? 'approved' : t.tier === 'AMBER' ? 'flagged' : 'blocked';
   if (!t.codes) t.codes = t.reasons || [];
-  
+  if (t.tier === 'RED') t._notifRead = false;
   S.transactions.unshift(t);
   S.total++;
   
@@ -204,6 +277,11 @@ function pushTransaction(t) {
   document.getElementById('feed-meta').textContent = `${Math.min(S.transactions.length,50)} transactions`;
 
   showToast(t);
+
+  if (t.tier === 'RED') {
+    updateNotifBadge();
+    triggerNotifAlert();
+  }
 }
 
 function formatNumber(n) {
@@ -254,6 +332,10 @@ function showToast(t) {
 function openModal(ref) {
   const t = S.transactions.find(x => x.ref === ref);
   if (!t) return;
+  if (t.tier === 'RED' && !t._notifRead) {
+    t._notifRead = true;
+    updateNotifBadge();
+  }
   // window._currentTxn = t; 
   const col = scCol(t.score);
   const mtag = t.model_trained !== false
