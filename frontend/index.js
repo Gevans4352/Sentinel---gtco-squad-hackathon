@@ -873,6 +873,7 @@ function startDemo() {
     else if (r < 0.30) simulateAmber();
     else simulateGreen();
   }, 45000);
+  //
 }
 
 function toggleDemo() {
