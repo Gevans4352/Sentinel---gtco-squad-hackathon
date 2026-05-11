@@ -210,6 +210,34 @@ function renderFeed() {
   document.getElementById('txn-body').innerHTML = S.transactions.slice(0,50).map(t => buildRow(t,false)).join('');
   document.getElementById('feed-meta').textContent = `${Math.min(S.transactions.length,50)} transactions`;
 }
+// place this right after the renderFeed() function (around line 100)
+
+function filterByEmail(query) {
+  const q = query.trim().toLowerCase();
+  const clearBtn = document.getElementById('search-clear');
+  if (clearBtn) clearBtn.style.display = q ? 'block' : 'none';
+
+  const rows = document.querySelectorAll('#txn-body tr');
+  let visible = 0;
+  rows.forEach(row => {
+    const emailCell = row.querySelector('.tc-email');
+    if (!emailCell) return;
+    const match = !q || emailCell.textContent.toLowerCase().includes(q);
+    row.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+
+  const meta = document.getElementById('feed-meta');
+  if (meta) meta.textContent = `${visible} transaction${visible !== 1 ? 's' : ''}`;
+}
+
+function clearEmailSearch() {
+  const input = document.getElementById('email-search');
+  if (!input) return;
+  input.value = '';
+  input.focus();
+  filterByEmail('');
+}
 
 function buildRow(t, anim) {
   const codes = (t.codes || []).length
