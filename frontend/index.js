@@ -717,7 +717,17 @@ function approveIt(ref) {
 
 function disputeModal(ref) {
   const t = S.transactions.find(x => x.ref === ref);
-  if (!t) return;
+  const d = S.disputes.find(x => x.ref === ref);
+  if (!t && !d) return;
+
+  // Use transaction data if available; fall back to dispute record for missing fields
+  const score    = t?.score    ?? d?.score    ?? '—';
+  const amount   = t?.amount   ?? d?.amount   ?? 0;
+  const email    = t?.email    ?? '—';
+  const codes    = t?.codes    || t?.reasons  || [];
+  const amtAvg   = t?.features?.amount_vs_avg ?? '—';
+  const trained  = t?.model_trained !== false;
+
   closeModal();
   document.getElementById('modal-mount').innerHTML = `
     <div class="modal-overlay" onclick="closeModal()">
@@ -730,13 +740,18 @@ function disputeModal(ref) {
           <div class="evid-box">
             <div class="evid-ttl">■ Sentinel AI Evidence Package</div>
             <div class="evid-body">
-              Trust Score: <strong style="color:var(--crimson)">${t.score}/100 — HIGH RISK</strong><br/>
-              Signals: <strong>${(t.codes || []).join(' + ') || 'ANOMALY_DETECTED'}</strong><br/>
-              Model: <strong>${t.model_trained !== false ? 'Rule Engine + Z-Score + Isolation Forest' : 'Heuristic fallback'}</strong><br/>
-              Deviation: <strong>${t.features?.amount_vs_avg ?? '—'}× above customer avg</strong>
+              Trust Score: <strong style="color:var(--crimson)">${score}/100 — HIGH RISK</strong><br/>
+              Customer: <strong>${email}</strong><br/>
+              Amount: <strong>${money(amount)}</strong><br/>
+              Signals: <strong>${codes.join(' + ') || 'ANOMALY_DETECTED'}</strong><br/>
+              Model: <strong>${trained ? 'Rule Engine + Z-Score + Isolation Forest' : 'Heuristic fallback'}</strong><br/>
+              Deviation: <strong>${amtAvg}× above customer avg</strong>
             </div>
           </div>
-          <div style="font-size:11px;color:var(--t3);line-height:1.6">This evidence will be submitted to Squad's Disputes API. Sentinel's ML analysis proves this transaction was high-risk before fulfillment.</div>
+          <div style="font-size:11px;color:var(--t3);line-height:1.6">
+            This evidence will be submitted to Squad's Disputes API. Sentinel's ML analysis
+            proves this transaction was high-risk before fulfillment.
+          </div>
         </div>
         <div class="modal-acts">
           <button class="mb mb-dp" onclick="submitEvidence('${ref}')">⚖ SUBMIT TO SQUAD API</button>
@@ -763,7 +778,7 @@ function submitEvidence(ref) {
 //DISPUTES
 function renderDisputes() {
   document.getElementById('disputes-tbody').innerHTML = S.disputes.map(d => `
-    <tr style="border-bottom:1px solid var(--line);cursor:default">
+    <tr style="border-bottom:1px solid var(--line);cursor:pointer" onclick="disputeModal('${d.ref}')" title="Click to fight this dispute">
       <td class="tc-time">${d.id}</td>
       <td class="tc-time">${d.ref}</td>
       <td class="tc-amt">${money(d.amount)}</td>
