@@ -16,10 +16,13 @@ function initDB() {
       score        INTEGER,
       tier         TEXT,
       reasons      TEXT,
+      features     TEXT,
       timestamp    TEXT,
       action_taken TEXT
     )
   `);
+  // Migrate: add features column if this is an existing database without it
+  try { db.exec('ALTER TABLE transactions ADD COLUMN features TEXT'); } catch (_) {}
   console.log('Database ready.');
 }
 
@@ -27,14 +30,20 @@ function initDB() {
 function saveTransaction(txn) {
   const stmt = db.prepare(`
     INSERT OR IGNORE INTO transactions
-      (ref, email, amount, card_bin, score, tier, reasons, timestamp, action_taken)
+      (ref, email, amount, card_bin, score, tier, reasons, features, timestamp, action_taken)
     VALUES
-      (@ref, @email, @amount, @card_bin, @score, @tier, @reasons, @timestamp, @action_taken)
+      (@ref, @email, @amount, @card_bin, @score, @tier, @reasons, @features, @timestamp, @action_taken)
   `);
   stmt.run({
     ...txn,
-    reasons: JSON.stringify(txn.reasons)
+    reasons:  JSON.stringify(txn.reasons  || []),
+    features: JSON.stringify(txn.features || {}),
   });
+}
+
+function updateTransactionStatus(ref, status, tier) {
+  db.prepare('UPDATE transactions SET action_taken = ?, tier = ? WHERE ref = ?')
+    .run(status, tier, ref);
 }
 
 // ── Read ──────────────────────────────────────────────────────────────────────
@@ -64,9 +73,13 @@ function getUserHistory(email) {
 }
 
 function getAllTransactions() {
-  return db.prepare(
-    'SELECT * FROM transactions ORDER BY id DESC LIMIT 100'
-  ).all();
+  return db.prepare('SELECT * FROM transactions ORDER BY id DESC LIMIT 100')
+    .all()
+    .map(r => ({
+      ...r,
+      reasons:  JSON.parse(r.reasons  || '[]'),
+      features: JSON.parse(r.features || '{}'),
+    }));
 }
 
 function getMerchantAverage() {
@@ -77,10 +90,11 @@ function getMerchantAverage() {
 module.exports = {
   initDB,
   saveTransaction,
+  updateTransactionStatus,
   transactionExists,
   getRecentByEmail,
   getRecentByBin,
   getUserHistory,
   getAllTransactions,
-  getMerchantAverage
+  getMerchantAverage,
 };

@@ -50,4 +50,19 @@ async function getDisputes() {
   }
 }
 
-module.exports = { verifyTransaction, refundTransaction, getDisputes };
+// Submit evidence to challenge a dispute via Squad's API.
+async function challengeDispute(transactionRef) {
+  try {
+    const { data } = await axios.post(
+      `${BASE_URL}/dispute/merchant/challenge`,
+      { transaction_ref: transactionRef },
+      { headers: authHeaders() }
+    );
+    return data;
+  } catch (err) {
+    console.error('[Squad] challengeDispute error:', err.message);
+    return null;
+  }
+}
+
+module.exports = { verifyTransaction, refundTransaction, getDisputes, challengeDispute };

@@ -104,9 +104,15 @@ function scoreTransaction(transaction, db) {
     else if (totalScore <= 70) tier = 'AMBER';
     else tier = 'RED';
 
-    return { score: totalScore, tier, reasons };
+    const features = {
+      amount_vs_avg: Math.round(amountVsAvg * 100) / 100,
+      velocity_1hr:  velocity,
+      hour_of_day:   watHour,
+    };
+
+    return { score: totalScore, tier, reasons, features };
   } catch {
-    return { score: 50, tier: 'AMBER', reasons: ['SCORING_ERROR'] };
+    return { score: 50, tier: 'AMBER', reasons: ['SCORING_ERROR'], features: {} };
   }
 }
 

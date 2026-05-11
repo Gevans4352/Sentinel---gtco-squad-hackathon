@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // express.raw keeps req.body as a Buffer so HMAC-SHA512 validation works correctly.
 app.post(
   '/webhook/squad',
-  express.raw({ type: 'application/json' }),
+  express.raw({ type: () => true }),   // capture raw body regardless of Content-Type
   (req, res) => receiveWebhook(req, res, db, io).catch((err) => {
     console.error('[Webhook] unhandled error:', err.message);
     res.status(500).json({ error: 'Internal error' });
@@ -54,6 +54,27 @@ app.get('/api/disputes', async (req, res) => {
   } catch (err) {
     console.error('[API] /api/disputes error:', err.message);
     res.status(500).json({ error: 'Failed to fetch disputes' });
+  }
+});
+
+app.patch('/api/transactions/:ref', (req, res) => {
+  try {
+    const { status, tier } = req.body;
+    db.updateTransactionStatus(req.params.ref, status, tier);
+    res.json({ message: 'Updated' });
+  } catch (err) {
+    console.error('[API] PATCH /api/transactions error:', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/disputes/:ref/submit', async (req, res) => {
+  try {
+    const result = await squadApi.challengeDispute(req.params.ref);
+    res.json(result || { message: 'Submitted' });
+  } catch (err) {
+    console.error('[API] POST /api/disputes submit error:', err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 

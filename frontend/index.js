@@ -11,31 +11,40 @@ const S = {
 };
 
 const SEED = [
-  { ref:'SQT-8906', time:'14:38:12', amount:420000, email:'e***a74@gmail.com', score:91, tier:'RED', codes:['HIGH_VELOCITY','OFF_HOURS'], status:'blocked', model_trained:true, features:{amount_vs_avg:4.2,velocity_1hr:4,hour_of_day:2} },
-  { ref:'SQT-8905', time:'14:37:55', amount:68000, email:'n***i@yahoo.com', score:54, tier:'AMBER', codes:['AMOUNT_SPIKE'], status:'flagged', model_trained:true, features:{amount_vs_avg:2.1,velocity_1hr:1,hour_of_day:21} },
-  { ref:'SQT-8904', time:'14:37:20', amount:3500, email:'k***e@hotmail.com', score:11, tier:'GREEN', codes:[], status:'approved', model_trained:true, features:{amount_vs_avg:0.8,velocity_1hr:0,hour_of_day:11} },
-  { ref:'SQT-8903', time:'14:36:40', amount:280000, email:'o***u31@gmail.com', score:88, tier:'RED', codes:['HIGH_VELOCITY','OFF_HOURS','AMOUNT_SPIKE'], status:'blocked', model_trained:false, features:{amount_vs_avg:5.1,velocity_1hr:5,hour_of_day:3} },
-  { ref:'SQT-8902', time:'14:35:10', amount:12500, email:'t***e@gmail.com', score:19, tier:'GREEN', codes:[], status:'approved', model_trained:true, features:{amount_vs_avg:0.9,velocity_1hr:0,hour_of_day:10} },
-  { ref:'SQT-8901', time:'14:34:50', amount:95000, email:'a***a@live.com', score:47, tier:'AMBER', codes:['NEW_DEVICE'], status:'flagged', model_trained:true, features:{amount_vs_avg:1.9,velocity_1hr:1,hour_of_day:22} },
-  { ref:'SQT-8900', time:'14:33:20', amount:7500, email:'f***i@gmail.com', score:15, tier:'GREEN', codes:[], status:'approved', model_trained:true, features:{amount_vs_avg:0.7,velocity_1hr:0,hour_of_day:14} },
-  { ref:'SQT-8899', time:'14:32:05', amount:350000, email:'c***a58@outlook.com', score:82, tier:'RED', codes:['ANOMALY_DETECTED','OFF_HOURS'], status:'blocked', model_trained:true, features:{amount_vs_avg:4.0,velocity_1hr:3,hour_of_day:2} },
-  { ref:'SQT-8898', time:'14:31:40', amount:20000, email:'b***n@yahoo.com', score:24, tier:'GREEN', codes:[], status:'approved', model_trained:true, features:{amount_vs_avg:1.1,velocity_1hr:0,hour_of_day:15} },
-  { ref:'SQT-8897', time:'14:30:15', amount:120000, email:'s***l@gmail.com', score:61, tier:'AMBER', codes:['AMOUNT_SPIKE','NEW_DEVICE'], status:'flagged', model_trained:true, features:{amount_vs_avg:2.8,velocity_1hr:2,hour_of_day:20} },
+  { ref:'SQT-8906', time:'14:38:12', amount:42000000,  email:'e***a74@gmail.com',   score:91, tier:'RED',   codes:['HIGH_VELOCITY','OFF_HOURS'],               status:'blocked',  model_trained:true,  features:{amount_vs_avg:4.2,velocity_1hr:4,hour_of_day:2}  },
+  { ref:'SQT-8905', time:'14:37:55', amount:6800000,   email:'n***i@yahoo.com',     score:54, tier:'AMBER', codes:['AMOUNT_SPIKE'],                            status:'flagged',  model_trained:true,  features:{amount_vs_avg:2.1,velocity_1hr:1,hour_of_day:21} },
+  { ref:'SQT-8904', time:'14:37:20', amount:350000,    email:'k***e@hotmail.com',   score:11, tier:'GREEN', codes:[],                                          status:'approved', model_trained:true,  features:{amount_vs_avg:0.8,velocity_1hr:0,hour_of_day:11} },
+  { ref:'SQT-8903', time:'14:36:40', amount:28000000,  email:'o***u31@gmail.com',   score:88, tier:'RED',   codes:['HIGH_VELOCITY','OFF_HOURS','AMOUNT_SPIKE'], status:'blocked',  model_trained:false, features:{amount_vs_avg:5.1,velocity_1hr:5,hour_of_day:3}  },
+  { ref:'SQT-8902', time:'14:35:10', amount:1250000,   email:'t***e@gmail.com',     score:19, tier:'GREEN', codes:[],                                          status:'approved', model_trained:true,  features:{amount_vs_avg:0.9,velocity_1hr:0,hour_of_day:10} },
+  { ref:'SQT-8901', time:'14:34:50', amount:9500000,   email:'a***a@live.com',      score:47, tier:'AMBER', codes:['NEW_DEVICE'],                              status:'flagged',  model_trained:true,  features:{amount_vs_avg:1.9,velocity_1hr:1,hour_of_day:22} },
+  { ref:'SQT-8900', time:'14:33:20', amount:750000,    email:'f***i@gmail.com',     score:15, tier:'GREEN', codes:[],                                          status:'approved', model_trained:true,  features:{amount_vs_avg:0.7,velocity_1hr:0,hour_of_day:14} },
+  { ref:'SQT-8899', time:'14:32:05', amount:35000000,  email:'c***a58@outlook.com', score:82, tier:'RED',   codes:['ANOMALY_DETECTED','OFF_HOURS'],            status:'blocked',  model_trained:true,  features:{amount_vs_avg:4.0,velocity_1hr:3,hour_of_day:2}  },
+  { ref:'SQT-8898', time:'14:31:40', amount:2000000,   email:'b***n@yahoo.com',     score:24, tier:'GREEN', codes:[],                                          status:'approved', model_trained:true,  features:{amount_vs_avg:1.1,velocity_1hr:0,hour_of_day:15} },
+  { ref:'SQT-8897', time:'14:30:15', amount:12000000,  email:'s***l@gmail.com',     score:61, tier:'AMBER', codes:['AMOUNT_SPIKE','NEW_DEVICE'],               status:'flagged',  model_trained:true,  features:{amount_vs_avg:2.8,velocity_1hr:2,hour_of_day:20} },
 ];
 
 const SEED_DSP = [
-  { id:'DSP-001', ref:'SQT-8906', amount:420000, reason:'Unauthorized transaction', score:91, status:'open' },
-  { id:'DSP-002', ref:'SQT-8903', amount:280000, reason:'Card not present fraud', score:88, status:'open' },
-  { id:'DSP-003', ref:'SQT-8899', amount:350000, reason:'Item not received', score:82, status:'open' },
+  { id:'DSP-001', ref:'SQT-8906', amount:42000000, reason:'Unauthorized transaction', score:91, status:'open' },
+  { id:'DSP-002', ref:'SQT-8903', amount:28000000, reason:'Card not present fraud',   score:88, status:'open' },
+  { id:'DSP-003', ref:'SQT-8899', amount:35000000, reason:'Item not received',        score:82, status:'open' },
 ];
 
 const RSN = {
-  HIGH_VELOCITY:'4 transactions in 5 min',
-  OFF_HOURS:'Placed 1AM–5AM',
-  AMOUNT_SPIKE:'4× above customer avg',
-  NEW_DEVICE:'Unrecognised device',
-  GEO_MISMATCH:'Billing ≠ IP country',
-  ANOMALY_DETECTED:'ML model anomaly flag',
+  HIGH_VELOCITY:     '4 transactions in 5 min',
+  OFF_HOURS:         'Placed 1AM–4AM WAT',
+  AMOUNT_SPIKE:      '3× above merchant average',
+  NEW_DEVICE:        'Unrecognised device',
+  GEO_MISMATCH:      'Billing ≠ IP country',
+  ANOMALY_DETECTED:  'ML model anomaly flag',
+  ML_HIGH_RISK:      'Isolation Forest: high fraud probability',
+  ML_MEDIUM_RISK:    'Isolation Forest: elevated fraud risk',
+  STAT_ANOMALY:      'Amount > 2σ from customer mean',
+  ROUND_AMOUNT:      'Suspiciously round amount',
+  FIRST_TIME_PAYER:  'No prior transaction history',
+  BIN_PATTERN:       'Card BIN linked to multiple emails',
+  BEHAVIOUR_MISMATCH:'Sudden jump from habitual amounts',
+  HIGH_VALUE_NEW:    'First-timer with very high payment',
+  SCORING_ERROR:     'Fallback score — engine error',
 };
 
 
@@ -51,7 +60,42 @@ document.addEventListener('DOMContentLoaded', () => {
   buildChart();
   initSocket();
   startDemo();
+  hydrateFromDB();
 });
+
+function hydrateFromDB() {
+  fetch('/api/transactions')
+    .then(r => r.json())
+    .then(rows => {
+      if (!Array.isArray(rows)) return;
+      let added = 0;
+      rows.forEach(r => {
+        if (S.transactions.some(x => x.ref === r.ref)) return;
+        const t = {
+          ref:           r.ref,
+          email:         r.email,
+          amount:        r.amount,
+          score:         r.score,
+          tier:          r.tier,
+          codes:         r.reasons || [],
+          reasons:       r.reasons || [],
+          features:      r.features || {},
+          status:        r.action_taken || (r.tier === 'GREEN' ? 'approved' : r.tier === 'AMBER' ? 'flagged' : 'blocked'),
+          time:          fmtTime(r.timestamp),
+          timestamp:     r.timestamp,
+          model_trained: true,
+          _notifRead:    r.tier !== 'RED',
+        };
+        S.transactions.push(t);
+        S.total++;
+        if (t.tier === 'AMBER') S.flagged++;
+        if (t.tier === 'RED')   { S.blocked++; S.saved += Math.round(t.amount / 100); }
+        added++;
+      });
+      if (added > 0) { renderFeed(); syncKPIs(); updateNotifBadge(); }
+    })
+    .catch(() => {});
+}
 
 //SIDEBAR TOGGLE
 function toggleSidebar() {
@@ -142,8 +186,8 @@ document.addEventListener('click', (e) => {
   }
 });
 
-//UTILS - FIXED money() function
-const money = n => '₦' + Number(n).toLocaleString();
+//UTILS
+const money = n => '₦' + (Number(n) / 100).toLocaleString();
 const scCol = s => s < 31 ? 'var(--jade)' : s < 71 ? 'var(--amber)' : 'var(--crimson)';
 const pillCls = t => t === 'GREEN' ? 'pill-g' : t === 'AMBER' ? 'pill-a' : 'pill-r';
 const rowCls = t => t === 'GREEN' ? 'row-g' : t === 'AMBER' ? 'row-a' : 'row-r';
@@ -212,7 +256,7 @@ function pushTransaction(t) {
   if (t.tier === 'RED') { 
     S.blocked++;  
     bumpKPI('kpi-blocked-card','kpi-blocked'); 
-    S.saved += t.amount; 
+    S.saved += Math.round(t.amount / 100); // convert kobo → naira for display
     bumpKPI('kpi-saved-card','kpi-saved'); 
   }
   
@@ -257,7 +301,7 @@ function syncKPIs() {
   document.getElementById('bar-total').style.width = Math.min(100, (S.total / 200) * 100) + '%';
   document.getElementById('bar-flagged').style.width = Math.min(100, (S.flagged / 20) * 100) + '%';
   document.getElementById('bar-blocked').style.width = Math.min(100, (S.blocked / 10) * 100) + '%';
-  document.getElementById('bar-saved').style.width = Math.min(100, (S.saved / 500000) * 100) + '%';
+  document.getElementById('bar-saved').style.width = Math.min(100, (S.saved / 1000000) * 100) + '%';
 }
 
 function bumpKPI(cardId, numId) {
@@ -347,139 +391,269 @@ function generateReport(ref) {
   const t = S.transactions.find(x => x.ref === ref);
   if (!t) return;
 
-  const col = t.tier === 'GREEN' ? '#22c55e' : t.tier === 'AMBER' ? '#f59e0b' : '#ef4444';
-  const fmtMoney = n => '₦' + Number(n).toLocaleString();
+  const col     = t.tier === 'GREEN' ? '#16a34a' : t.tier === 'AMBER' ? '#d97706' : '#dc2626';
+  const colBg   = t.tier === 'GREEN' ? '#f0fdf4' : t.tier === 'AMBER' ? '#fffbeb' : '#fef2f2';
+  const fmtMoney = n => '₦' + (Number(n) / 100).toLocaleString();
+  const now      = new Date();
+  const nowStr   = now.toLocaleString('en-GB');
+  const timeStr  = t.time || fmtTime(t.timestamp);
 
-  const reasons = (t.codes || []).map(c => {
-    const desc = {
-      HIGH_VELOCITY: 'Multiple rapid transactions from same email',
-      OFF_HOURS: 'Transaction during 1-4 AM high-risk window',
-      AMOUNT_SPIKE: 'Amount 3x+ above merchant average',
-      NEW_DEVICE: 'Unrecognized device fingerprint',
-      GEO_MISMATCH: 'Billing country ≠ IP location',
-      ANOMALY_DETECTED: 'ML model flagged statistical anomaly',
-      ROUND_AMOUNT: 'Suspiciously round amount (fraud fingerprint)',
-      FIRST_TIME_PAYER: 'No prior transaction history',
-      BIN_PATTERN: 'Card prefix linked to multiple emails',
-      BEHAVIOUR_MISMATCH: 'Sudden jump from small to large amounts',
-      HIGH_VALUE_NEW: 'First-timer with unusually high payment'
-    }[c] || 'Risk signal triggered';
-    return `<div style="margin-bottom:10px;padding:10px;background:#0b0b0b;border-radius:8px;border-left:3px solid #ef4444">
-      <div style="font-family:monospace;font-size:12px;color:#ef4444">${c}</div>
-      <div style="font-size:13px;color:#bbb">${desc}</div>
-    </div>`;
-  }).join('') || '<div style="color:#666">No risk signals</div>';
+  const SIGNAL_DESC = {
+    HIGH_VELOCITY:    'Multiple rapid transactions from the same email address',
+    OFF_HOURS:        'Transaction placed during 1–4 AM high-risk window',
+    AMOUNT_SPIKE:     'Amount is 3× or more above the merchant average',
+    NEW_DEVICE:       'Unrecognised device fingerprint',
+    GEO_MISMATCH:     'Billing country does not match IP geolocation',
+    ANOMALY_DETECTED: 'ML Isolation Forest model flagged a statistical anomaly',
+    ROUND_AMOUNT:     'Suspiciously round kobo amount — common fraud fingerprint',
+    FIRST_TIME_PAYER: 'No prior transaction history for this email',
+    BIN_PATTERN:      'Card prefix (BIN) linked to multiple different emails',
+    BEHAVIOUR_MISMATCH: 'Sudden jump from small habitual amounts to a large payment',
+    HIGH_VALUE_NEW:   'First-time customer with an unusually high payment amount',
+  };
 
-  const features = t.features ? Object.entries(t.features).map(([k,v]) => {
-    const c = parseFloat(v) > 2 ? '#ef4444' : parseFloat(v) > 1 ? '#f59e0b' : '#22c55e';
-    return `<tr><td style="padding:6px 0;color:#888">${k}</td><td style="text-align:right;color:${c};font-weight:700">${v}</td></tr>`;
-  }).join('') : '';
+  const reasonsHtml = (t.codes || []).length
+    ? (t.codes || []).map(c => `
+        <tr>
+          <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;vertical-align:top">
+            <span style="font-family:monospace;font-size:11px;font-weight:700;color:${col};background:${colBg};padding:2px 8px;border-radius:4px;border:1px solid ${col}">${c}</span>
+          </td>
+          <td style="padding:10px 12px;border-bottom:1px solid #e2e8f0;color:#475569;font-size:13px;vertical-align:top">${SIGNAL_DESC[c] || 'Risk signal triggered'}</td>
+        </tr>`).join('')
+    : `<tr><td colspan="2" style="padding:10px 12px;color:#94a3b8;font-style:italic">No risk signals detected</td></tr>`;
+
+  const featuresHtml = t.features
+    ? Object.entries(t.features).map(([k, v]) => {
+        const fv = parseFloat(v);
+        const fc = fv > 2 ? '#dc2626' : fv > 1 ? '#d97706' : '#16a34a';
+        const bar = Math.min(100, fv * 20);
+        return `<tr>
+          <td style="padding:8px 12px;border-bottom:1px solid #e2e8f0;color:#64748b;font-size:12px;font-family:monospace">${k}</td>
+          <td style="padding:8px 12px;border-bottom:1px solid #e2e8f0">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px">
+                <div style="width:${bar}%;height:6px;background:${fc};border-radius:3px"></div>
+              </div>
+              <span style="font-weight:700;color:${fc};font-size:12px;font-family:monospace;min-width:32px;text-align:right">${v}</span>
+            </div>
+          </td>
+        </tr>`;
+      }).join('')
+    : '';
 
   const plain = t.tier === 'GREEN'
-    ? `This transaction from <b>${t.email}</b> is <b>low risk</b>. Amount of ${fmtMoney(t.amount)} is normal. Score ${t.score}/100 — safe to process.`
+    ? `This transaction from <strong>${t.email}</strong> is <strong style="color:#16a34a">low risk</strong>. The payment of ${fmtMoney(t.amount)} is consistent with normal customer behaviour. Sentinel's AI engine assigned a score of ${t.score}/100 — safe to process and fulfil.`
     : t.tier === 'AMBER'
-    ? `This transaction needs <b>review</b>. ${(t.codes||[]).length} risk signal(s) detected. Score ${t.score}/100 — verify before fulfilling.`
-    : `This transaction is <b>high risk</b> and blocked. ${(t.codes||[]).length} critical signals triggered. Score ${t.score}/100 — fraud likely.`;
+    ? `This transaction from <strong>${t.email}</strong> requires <strong style="color:#d97706">manual review</strong>. ${(t.codes||[]).length} risk signal(s) were detected. The payment of ${fmtMoney(t.amount)} scored ${t.score}/100 — verify customer identity before fulfilling the order.`
+    : `This transaction from <strong>${t.email}</strong> is <strong style="color:#dc2626">high risk and was automatically blocked</strong>. ${(t.codes||[]).length} critical fraud signal(s) triggered. The payment of ${fmtMoney(t.amount)} scored ${t.score}/100. Sentinel's rule engine, Z-score model, and Isolation Forest all flagged this as likely fraudulent activity.`;
 
   const html = `<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><title>Report — ${t.ref}</title>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Sentinel Report — ${t.ref}</title>
 <style>
-body{font-family:sans-serif;background:#0b0b0b;color:#e5e5e5;padding:32px 16px}
-.wrap{max-width:640px;margin:0 auto;background:#141414;border-radius:16px;padding:32px;border:1px solid #222}
-h1{margin:0 0 4px;font-size:20px} .ref{color:${col};font-family:monospace}
-.badge{display:inline-block;margin:12px 0;padding:4px 12px;border:1px solid ${col};color:${col};border-radius:20px;font-size:11px;font-weight:700}
-.sec{margin:24px 0} h2{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:#888;margin-bottom:10px;padding-left:8px;border-left:3px solid ${col}}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.box{background:#0b0b0b;border:1px solid #222;border-radius:8px;padding:12px}
-.lbl{font-size:10px;color:#666;text-transform:uppercase;margin-bottom:4px}
-.val{font-size:16px;font-weight:700}
-.score{display:flex;align-items:center;gap:14px;margin-bottom:12px}
-.sc{width:60px;height:60px;border-radius:50%;border:3px solid ${col};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:${col}}
-.plain{background:#0b0b0b;border:1px solid #222;border-radius:8px;padding:14px;font-size:13px;color:#ccc;line-height:1.7}
-.raw{background:#080808;border:1px solid #1a1a1a;border-radius:8px;padding:12px;font-family:monospace;font-size:10px;color:#777;white-space:pre-wrap}
-table{width:100%;font-size:13px}
-.foot{text-align:center;margin-top:24px;padding-top:16px;border-top:1px solid #222;color:#555;font-size:11px}
-</style></head><body>
-<div class="wrap">
-  <h1>Sentinel Report</h1>
-  <div class="ref">${t.ref}</div>
-  <span class="badge">${t.tier} RISK</span>
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body { margin: 0; }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #ffffff; color: #1e293b; padding: 32px 24px; font-size: 14px; line-height: 1.5; }
+.page { max-width: 720px; margin: 0 auto; }
 
-  <div class="sec"><h2>Summary</h2>
-    <div class="grid">
-      <div class="box"><div class="lbl">Amount</div><div class="val">${fmtMoney(t.amount)}</div></div>
-      <div class="box"><div class="lbl">Customer</div><div class="val" style="font-size:13px">${t.email}</div></div>
-      <div class="box"><div class="lbl">Time</div><div class="val" style="font-size:13px">${t.time||'—'}</div></div>
-      <div class="box"><div class="lbl">Status</div><div class="val">${(t.status||t.tier).toUpperCase()}</div></div>
+/* Header */
+.header { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 20px; border-bottom: 2px solid #0d2137; margin-bottom: 24px; }
+.brand { display: flex; flex-direction: column; }
+.brand-name { font-size: 22px; font-weight: 800; color: #0d2137; letter-spacing: 2px; }
+.brand-sub  { font-size: 11px; color: #64748b; letter-spacing: 1px; margin-top: 2px; }
+.header-right { text-align: right; }
+.report-title { font-size: 13px; font-weight: 600; color: #0d2137; }
+.report-date  { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+
+/* Ref + badge row */
+.ref-row  { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.ref-val  { font-family: monospace; font-size: 15px; font-weight: 700; color: #0d2137; }
+.tier-badge { padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 700; border: 1.5px solid ${col}; color: ${col}; background: ${colBg}; letter-spacing: 1px; }
+
+/* Section */
+.sec { margin-bottom: 24px; }
+.sec-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #94a3b8; margin-bottom: 10px; padding-left: 10px; border-left: 3px solid ${col}; }
+
+/* Grid cards */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; }
+.card-lbl { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 5px; }
+.card-val { font-size: 15px; font-weight: 700; color: #1e293b; }
+
+/* Score */
+.score-row { display: flex; align-items: center; gap: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; }
+.score-ring { width: 68px; height: 68px; border-radius: 50%; border: 4px solid ${col}; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.score-num  { font-size: 24px; font-weight: 800; color: ${col}; }
+.score-tier { font-size: 15px; font-weight: 700; color: ${col}; }
+.score-desc { font-size: 12px; color: #64748b; margin-top: 4px; }
+
+/* Timeline */
+.timeline { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; }
+.tl-row { display: flex; gap: 12px; padding: 6px 0; border-bottom: 1px solid #e2e8f0; font-size: 12px; }
+.tl-row:last-child { border-bottom: none; }
+.tl-time { color: #94a3b8; font-family: monospace; min-width: 70px; }
+.tl-text { color: #475569; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
+th { background: #f1f5f9; padding: 8px 12px; text-align: left; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: 600; }
+
+/* Plain English */
+.plain { background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid ${col}; border-radius: 8px; padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+
+/* Raw payload */
+.raw { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; font-family: monospace; font-size: 10px; color: #64748b; white-space: pre-wrap; word-break: break-all; }
+
+/* Footer */
+.footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <div class="brand-name">SENTINEL</div>
+      <div class="brand-sub">AI Fraud Detection · Trust Monitor</div>
+    </div>
+    <div class="header-right">
+      <div class="report-title">Transaction Risk Report</div>
+      <div class="report-date">${nowStr}</div>
     </div>
   </div>
 
-  <div class="sec"><h2>AI Trust Score</h2>
-    <div class="score">
-      <div class="sc">${t.score}</div>
+  <!-- Ref + badge -->
+  <div class="ref-row">
+    <span class="ref-val">${t.ref}</span>
+    <span class="tier-badge">${t.tier} RISK</span>
+  </div>
+
+  <!-- Summary -->
+  <div class="sec">
+    <div class="sec-title">Summary</div>
+    <div class="grid">
+      <div class="card"><div class="card-lbl">Amount</div><div class="card-val">${fmtMoney(t.amount)}</div></div>
+      <div class="card"><div class="card-lbl">Customer</div><div class="card-val" style="font-size:13px">${t.email}</div></div>
+      <div class="card"><div class="card-lbl">Time</div><div class="card-val" style="font-size:13px">${timeStr}</div></div>
+      <div class="card"><div class="card-lbl">Decision</div><div class="card-val" style="color:${col}">${(t.status || t.tier).toUpperCase()}</div></div>
+    </div>
+  </div>
+
+  <!-- AI Trust Score -->
+  <div class="sec">
+    <div class="sec-title">AI Trust Score</div>
+    <div class="score-row">
+      <div class="score-ring"><span class="score-num">${t.score}</span></div>
       <div>
-        <div style="font-weight:700;color:${col}">${t.tier} — ${t.score}/100</div>
-        <div style="font-size:12px;color:#999">${t.tier==='GREEN'?'Safe to process':t.tier==='AMBER'?'Review recommended':'Automatic block'}</div>
+        <div class="score-tier">${t.tier} — ${t.score}/100</div>
+        <div class="score-desc">${t.tier === 'GREEN' ? 'Low risk — safe to process and fulfil.' : t.tier === 'AMBER' ? 'Medium risk — manual review recommended before fulfilment.' : 'High risk — automatically blocked by Sentinel.'}</div>
+        <div style="margin-top:8px;font-size:11px;color:#94a3b8">Engine: ${t.model_trained !== false ? 'Rule Engine (R01–R08) + Z-Score + Isolation Forest ML' : 'Rule Engine (R01–R08) + Z-Score'}</div>
       </div>
     </div>
   </div>
 
-  <div class="sec"><h2>Timeline</h2>
-    <div class="box">
-      <div style="font-size:12px;color:#aaa;line-height:1.8">
-        <b>${t.time||'—'}</b> — Transaction received (${fmtMoney(t.amount)})<br>
-        <b>${t.time||'—'}</b> — Risk analysis started (R01–R08)<br>
-        <b>${t.time||'—'}</b> — ${(t.codes||[]).length} signal(s) detected<br>
-        <b>${t.time||'—'}</b> — Decision: ${(t.status||t.tier).toUpperCase()}<br>
-        <b>${new Date().toLocaleTimeString('en-GB')}</b> — Report generated
-      </div>
+  <!-- Timeline -->
+  <div class="sec">
+    <div class="sec-title">Timeline</div>
+    <div class="timeline">
+      <div class="tl-row"><span class="tl-time">${timeStr}</span><span class="tl-text">Transaction received — ${fmtMoney(t.amount)} from ${t.email}</span></div>
+      <div class="tl-row"><span class="tl-time">${timeStr}</span><span class="tl-text">Sentinel risk analysis initiated (Rules R01–R08, Z-Score, ML)</span></div>
+      <div class="tl-row"><span class="tl-time">${timeStr}</span><span class="tl-text">${(t.codes||[]).length} risk signal(s) detected — score ${t.score}/100</span></div>
+      <div class="tl-row"><span class="tl-time">${timeStr}</span><span class="tl-text">Decision: <strong style="color:${col}">${(t.status || t.tier).toUpperCase()}</strong></span></div>
+      <div class="tl-row"><span class="tl-time">${now.toLocaleTimeString('en-GB')}</span><span class="tl-text">Report generated</span></div>
     </div>
   </div>
 
-  <div class="sec"><h2>Rules Triggered (${(t.codes||[]).length})</h2>${reasons}</div>
+  <!-- Rules Triggered -->
+  <div class="sec">
+    <div class="sec-title">Risk Signals — ${(t.codes||[]).length} triggered</div>
+    <table>
+      <thead><tr><th>Signal Code</th><th>Description</th></tr></thead>
+      <tbody>${reasonsHtml}</tbody>
+    </table>
+  </div>
 
-  <div class="sec"><h2>ML Output</h2>
+  <!-- ML Output -->
+  <div class="sec">
+    <div class="sec-title">ML Output</div>
     <div class="grid">
-      <div class="box"><div class="lbl">Score</div><div class="val" style="color:${col}">${t.score}/100</div></div>
-      <div class="box"><div class="lbl">Confidence</div><div class="val" style="font-size:13px">${t.tier==='GREEN'?'High — Legit':t.tier==='AMBER'?'Moderate':'High — Fraud'}</div></div>
+      <div class="card"><div class="card-lbl">Trust Score</div><div class="card-val" style="color:${col}">${t.score} / 100</div></div>
+      <div class="card"><div class="card-lbl">Confidence</div><div class="card-val" style="font-size:13px">${t.tier === 'GREEN' ? 'High — Legitimate' : t.tier === 'AMBER' ? 'Moderate — Review' : 'High — Fraudulent'}</div></div>
     </div>
   </div>
 
-  ${features?`<div class="sec"><h2>Feature Deviations</h2><table>${features}</table></div>`:''}
+  ${featuresHtml ? `
+  <div class="sec">
+    <div class="sec-title">Feature Deviations</div>
+    <table>
+      <thead><tr><th>Feature</th><th>Value vs. Baseline</th></tr></thead>
+      <tbody>${featuresHtml}</tbody>
+    </table>
+  </div>` : ''}
 
-  <div class="sec"><h2>Plain English</h2><div class="plain">${plain}</div></div>
+  <!-- Plain English -->
+  <div class="sec">
+    <div class="sec-title">Plain English Summary</div>
+    <div class="plain">${plain}</div>
+  </div>
 
-  <div class="sec"><h2>Raw Payload</h2><div class="raw">${JSON.stringify(t,null,2)}</div></div>
+  <!-- Raw Payload -->
+  <div class="sec">
+    <div class="sec-title">Raw Payload</div>
+    <div class="raw">${JSON.stringify(t, null, 2)}</div>
+  </div>
 
-  <div class="foot">Sentinel &middot; ${new Date().toLocaleString('en-GB')} &middot; Confidential</div>
-</div></body></html>`;
+  <!-- Footer -->
+  <div class="footer">
+    <span>SENTINEL · AI Fraud Detection</span>
+    <span>Generated ${nowStr}</span>
+    <span>CONFIDENTIAL</span>
+  </div>
 
-  const blob = new Blob([html], {type:'text/html'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `report-${t.ref}.html`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
+</div>
+</body>
+</html>`;
+
+  // Inject into hidden iframe and trigger print dialog
+  const iframe = document.createElement('iframe');
+  iframe.style.cssText = 'position:fixed;top:-9999px;left:-9999px;width:800px;height:600px;border:none;';
+  document.body.appendChild(iframe);
+  iframe.contentDocument.open();
+  iframe.contentDocument.write(html);
+  iframe.contentDocument.close();
+  iframe.contentDocument.title = `report-${t.ref}`;
+  setTimeout(() => {
+    iframe.contentWindow.print();
+    setTimeout(() => iframe.remove(), 10000);
+  }, 800);
 }
 
 function closeModal() { document.getElementById('modal-mount').innerHTML = ''; }
 
 function approveIt(ref) {
   const t = S.transactions.find(x => x.ref === ref);
-  if (t) { 
-    t.status = 'approved'; 
-    t.tier = 'GREEN'; 
-    S.flagged = Math.max(0, S.flagged - 1); 
+  if (t) {
+    t.status = 'approved';
+    t.tier   = 'GREEN';
+    S.flagged = Math.max(0, S.flagged - 1);
   }
-  closeModal(); 
+  closeModal();
   renderFeed();
   syncKPIs();
+  fetch(`/api/transactions/${encodeURIComponent(ref)}`, {
+    method:  'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ status: 'approved', tier: 'GREEN' }),
+  }).catch(() => {});
   const el = document.createElement('div');
   el.className = 'toast toast-g';
-  el.innerHTML = `<span class="t-icon">✅</span><div class="t-body"><strong>APPROVED</strong><br/>Transaction approved manually</div>`;
+  el.innerHTML = `<span class="t-icon">✅</span><div class="t-body"><strong>APPROVED</strong><br/>Transaction approved and saved</div>`;
   document.getElementById('toasts').appendChild(el);
   setTimeout(() => el.remove(), 2500);
 }
@@ -518,8 +692,10 @@ function disputeModal(ref) {
 function submitEvidence(ref) {
   const d = S.disputes.find(x => x.ref === ref);
   if (d) d.status = 'submitted';
-  closeModal(); 
+  closeModal();
   renderDisputes();
+  fetch(`/api/disputes/${encodeURIComponent(ref)}/submit`, { method: 'POST' })
+    .catch(() => {});
   const el = document.createElement('div');
   el.className = 'toast toast-g';
   el.innerHTML = `<span class="t-icon">✅</span><div class="t-body"><strong>SUBMITTED</strong><br/>Evidence sent to Squad Disputes API</div>`;
