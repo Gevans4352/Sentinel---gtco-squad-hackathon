@@ -89,7 +89,7 @@ function hydrateFromDB() {
         S.transactions.push(t);
         S.total++;
         if (t.tier === 'AMBER') S.flagged++;
-        if (t.tier === 'RED')   { S.blocked++; S.saved += Math.round(t.amount / 100); }
+        if (t.tier === 'RED')   { S.blocked++; S.saved += Math.round(t.amount / 100); _autoAddDispute(t); }
         added++;
       });
       if (added > 0) { renderFeed(); syncKPIs(); updateNotifBadge(); }
@@ -239,6 +239,34 @@ function buildRow(t, anim) {
    </tr>`;
 }
 
+let _dspCount = 100;
+function _autoAddDispute(t) {
+  if (S.disputes.some(d => d.ref === t.ref)) return;
+  const codes  = t.codes || t.reasons || [];
+  const reason = codes.includes('HIGH_VELOCITY')    ? 'High velocity fraud detected'
+               : codes.includes('AMOUNT_SPIKE')     ? 'Abnormal transaction amount'
+               : codes.includes('OFF_HOURS')        ? 'Suspicious off-hours activity'
+               : codes.includes('ML_HIGH_RISK')     ? 'ML model flagged high fraud risk'
+               : codes.includes('ANOMALY_DETECTED') ? 'Statistical anomaly detected'
+               : 'Unauthorized transaction';
+  S.disputes.unshift({
+    id:     'DSP-' + String(++_dspCount).padStart(3, '0'),
+    ref:    t.ref,
+    amount: t.amount,
+    reason,
+    score:  t.score,
+    status: 'open',
+  });
+  renderDisputes();
+  // Expand disputes panel if it's collapsed
+  const body = document.getElementById('disputes-body');
+  if (body && body.style.display === 'none') {
+    body.style.display = '';
+    const chev = document.getElementById('disp-chev');
+    if (chev) chev.classList.remove('up');
+  }
+}
+
 function pushTransaction(t) {
   if (S.transactions.some(x => x.ref === t.ref)) return;
   
@@ -257,7 +285,8 @@ function pushTransaction(t) {
     S.blocked++;  
     bumpKPI('kpi-blocked-card','kpi-blocked'); 
     S.saved += Math.round(t.amount / 100); // convert kobo → naira for display
-    bumpKPI('kpi-saved-card','kpi-saved'); 
+    bumpKPI('kpi-saved-card','kpi-saved');
+    _autoAddDispute(t);
   }
   
   bumpKPI('kpi-total-card','kpi-total');
