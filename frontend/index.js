@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   S.transactions = [...SEED];
   S.disputes = [...SEED_DSP];
   renderFeed();
+  buildTagCloud();
   renderDisputes();
   syncKPIs();
   S.transactions.forEach((t) => {
@@ -237,26 +238,59 @@ function renderFeed() {
   document.getElementById("feed-meta").textContent =
     `${Math.min(S.transactions.length, 50)} transactions`;
 }
-// place this right after the renderFeed() function (around line 100)
+//FILTER ENGINE
 
-function filterByEmail(query) {
-  const q = query.trim().toLowerCase();
+function filterFeed() {
+  const q = document.getElementById("email-search")?.value.trim().toLowerCase() || "";
   const clearBtn = document.getElementById("search-clear");
   if (clearBtn) clearBtn.style.display = q ? "block" : "none";
 
+  applyFilter(q);
+}
+
+function applyFilter(q) {
   const rows = document.querySelectorAll("#txn-body tr");
   let visible = 0;
+
   rows.forEach((row) => {
     const emailCell = row.querySelector(".tc-email");
-    if (!emailCell) return;
-    const match = !q || emailCell.textContent.toLowerCase().includes(q);
+    const signalsCell = row.querySelector("td:nth-child(7)");
+    const tierCell = row.querySelector("td:nth-child(6) .pill");
+
+    // Email match
+    const emailMatch = emailCell && emailCell.textContent.toLowerCase().includes(q);
+
+    // Signal match
+    let signalMatch = false;
+    if (signalsCell) {
+      const signalSpans = signalsCell.querySelectorAll(".sig");
+      signalMatch = Array.from(signalSpans).some(s => 
+        s.textContent.toLowerCase().includes(q)
+      );
+    }
+
+    // Tier/status match
+    const tierMatch = tierCell && tierCell.textContent.toLowerCase().includes(q);
+    const statusCell = row.querySelector("td:nth-child(8)");
+    const statusMatch = statusCell && statusCell.textContent.toLowerCase().includes(q);
+
+    const match = !q || emailMatch || signalMatch || tierMatch || statusMatch;
     row.style.display = match ? "" : "none";
     if (match) visible++;
   });
 
   const meta = document.getElementById("feed-meta");
-  if (meta)
-    meta.textContent = `${visible} transaction${visible !== 1 ? "s" : ""}`;
+  if (meta) meta.textContent = `${visible} transaction${visible !== 1 ? "s" : ""}`;
+
+  // Update active filter pill
+  const afContainer = document.getElementById("active-filters");
+  const afText = document.getElementById("af-text");
+  if (q && afContainer && afText) {
+    afText.textContent = q;
+    afContainer.style.display = "flex";
+  } else if (afContainer) {
+    afContainer.style.display = "none";
+  }
 }
 
 function clearEmailSearch() {
@@ -264,8 +298,87 @@ function clearEmailSearch() {
   if (!input) return;
   input.value = "";
   input.focus();
-  filterByEmail("");
+  filterFeed();
 }
+
+function clearActiveFilter() {
+  clearEmailSearch();
+  document.querySelectorAll(".tag-chip").forEach(t => t.classList.remove("active"));
+}
+
+//TAG CLOUD
+
+const POPULAR_TAGS = [
+  { label: "RED", type: "tier", color: "crimson" },
+  { label: "AMBER", type: "tier", color: "amber" },
+  { label: "GREEN", type: "tier", color: "jade" },
+  { label: "HIGH_VELOCITY", type: "signal", color: "crimson" },
+  { label: "AMOUNT_SPIKE", type: "signal", color: "amber" },
+  { label: "OFF_HOURS", type: "signal", color: "amber" },
+  { label: "GEO_MISMATCH", type: "signal", color: "crimson" },
+  { label: "ML_HIGH_RISK", type: "signal", color: "crimson" },
+  { label: "NEW_DEVICE", type: "signal", color: "amber" },
+  { label: "ROUND_AMOUNT", type: "signal", color: "amber" },
+  { label: "blocked", type: "status", color: "crimson" },
+  { label: "flagged", type: "status", color: "amber" },
+  { label: "approved", type: "status", color: "jade" },
+];
+
+function buildTagCloud() {
+  const container = document.getElementById("tag-cloud");
+  if (!container) return;
+  const counts = {};
+  POPULAR_TAGS.forEach(tag => {
+    counts[tag.label] = 0;
+  });
+
+  S.transactions.forEach(t => {
+    // Count by tier
+    if (counts[t.tier] !== undefined) counts[t.tier]++;
+    // Count by status
+    if (counts[t.status] !== undefined) counts[t.status]++;
+    // Count by signal
+    (t.codes || []).forEach(code => {
+      if (counts[code] !== undefined) counts[code]++;
+    });
+  });
+
+  // Build HTML
+  const tagsHtml = POPULAR_TAGS.map(tag => {
+    const count = counts[tag.label] || 0;
+    if (count === 0) return ""; 
+    return `<button class="tag-chip tag-${tag.color}" data-tag="${tag.label}" onclick="clickTag('${tag.label}', this)">${tag.label} <span class="tag-count">${count}</span></button>`;
+  }).join("");
+
+  container.innerHTML = `<span class="tag-cloud-label">Quick filters:</span>${tagsHtml}`;
+}
+
+function clickTag(tag, btn) {
+  const input = document.getElementById("email-search");
+  if (!input) return;
+
+  // Toggle: if already active, clear it
+  if (btn.classList.contains("active")) {
+    clearActiveFilter();
+    return;
+  }
+
+  // Clear other active tags
+  document.querySelectorAll(".tag-chip").forEach(t => t.classList.remove("active"));
+
+  // Set this tag as active
+  btn.classList.add("active");
+
+  // Apply filter
+  input.value = tag.toLowerCase();
+  filterFeed();
+}
+
+function refreshTagCloud() {
+  buildTagCloud();
+}
+
+
 
 function buildRow(t, anim) {
   const codes = (t.codes || []).length
@@ -389,6 +502,7 @@ function pushTransaction(t) {
     updateNotifBadge();
     triggerNotifAlert();
   }
+  refreshTagCloud();
 }
 
 function formatNumber(n) {
@@ -797,6 +911,7 @@ function approveIt(ref) {
   closeModal();
   renderFeed();
   syncKPIs();
+  refreshTagCloud();  
   fetch(`/api/transactions/${encodeURIComponent(ref)}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
