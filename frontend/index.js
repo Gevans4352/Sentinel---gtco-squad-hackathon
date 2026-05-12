@@ -1,8 +1,8 @@
 const S = {
-  total: 0,
-  flagged: 0,
-  blocked: 0,
-  saved: 0,
+  total: 10,
+  flagged: 3,
+  blocked: 3,
+  saved: 600000,
   transactions: [],
   disputes: [],
   demoMode: true,
@@ -10,8 +10,28 @@ const S = {
   sidebarOpen: true,
 };
 
-const SEED = []
-const SEED_DSP = [];
+// Historical seed — spans Fri 9 May → Sun 11 May (timestamps in UTC, WAT = UTC+1)
+const SEED = [
+  // — 11 May —
+  { ref:'SQT-8905', timestamp:'2026-05-11T20:37:55.000Z', amount:7500000,  email:'n***i@yahoo.com',     score:54, tier:'AMBER', codes:['AMOUNT_SPIKE'],                             status:'flagged',  model_trained:true,  features:{amount_vs_avg:2.1,velocity_1hr:1,hour_of_day:21} },
+  { ref:'SQT-8904', timestamp:'2026-05-11T10:37:20.000Z', amount:1800000,  email:'k***e@hotmail.com',   score:11, tier:'GREEN', codes:[],                                           status:'approved', model_trained:true,  features:{amount_vs_avg:0.8,velocity_1hr:0,hour_of_day:11} },
+  { ref:'SQT-8906', timestamp:'2026-05-11T01:38:12.000Z', amount:18500000, email:'e***a74@gmail.com',   score:91, tier:'RED',   codes:['HIGH_VELOCITY','OFF_HOURS'],                status:'blocked',  model_trained:true,  features:{amount_vs_avg:4.2,velocity_1hr:4,hour_of_day:2}  },
+  // — 10 May —
+  { ref:'SQT-8901', timestamp:'2026-05-10T19:22:18.000Z', amount:8500000,  email:'a***a@live.com',      score:47, tier:'AMBER', codes:['NEW_DEVICE'],                               status:'flagged',  model_trained:true,  features:{amount_vs_avg:1.9,velocity_1hr:1,hour_of_day:20} },
+  { ref:'SQT-8902', timestamp:'2026-05-10T12:45:55.000Z', amount:1250000,  email:'t***e@gmail.com',     score:19, tier:'GREEN', codes:[],                                           status:'approved', model_trained:true,  features:{amount_vs_avg:0.9,velocity_1hr:0,hour_of_day:13} },
+  { ref:'SQT-8900', timestamp:'2026-05-10T09:33:40.000Z', amount:950000,   email:'f***i@gmail.com',     score:15, tier:'GREEN', codes:[],                                           status:'approved', model_trained:true,  features:{amount_vs_avg:0.7,velocity_1hr:0,hour_of_day:10} },
+  { ref:'SQT-8903', timestamp:'2026-05-10T02:22:41.000Z', amount:22000000, email:'o***u31@gmail.com',   score:88, tier:'RED',   codes:['HIGH_VELOCITY','OFF_HOURS','AMOUNT_SPIKE'],  status:'blocked',  model_trained:false, features:{amount_vs_avg:5.1,velocity_1hr:5,hour_of_day:3}  },
+  // — 9 May —
+  { ref:'SQT-8898', timestamp:'2026-05-09T14:08:33.000Z', amount:2200000,  email:'b***n@yahoo.com',     score:24, tier:'GREEN', codes:[],                                           status:'approved', model_trained:true,  features:{amount_vs_avg:1.1,velocity_1hr:0,hour_of_day:15} },
+  { ref:'SQT-8897', timestamp:'2026-05-09T11:30:15.000Z', amount:11000000, email:'s***l@gmail.com',     score:61, tier:'AMBER', codes:['AMOUNT_SPIKE','NEW_DEVICE'],                status:'flagged',  model_trained:true,  features:{amount_vs_avg:2.8,velocity_1hr:2,hour_of_day:12} },
+  { ref:'SQT-8899', timestamp:'2026-05-09T01:05:22.000Z', amount:19500000, email:'c***a58@outlook.com', score:82, tier:'RED',   codes:['ANOMALY_DETECTED','OFF_HOURS'],             status:'blocked',  model_trained:true,  features:{amount_vs_avg:4.0,velocity_1hr:3,hour_of_day:2}  },
+];
+
+const SEED_DSP = [
+  { id:'DSP-001', ref:'SQT-8906', amount:18500000, reason:'Unauthorized transaction', score:91, status:'open' },
+  { id:'DSP-002', ref:'SQT-8903', amount:22000000, reason:'Card not present fraud',   score:88, status:'open' },
+  { id:'DSP-003', ref:'SQT-8899', amount:19500000, reason:'Item not received',        score:82, status:'open' },
+];
 
 const RSN = {
   HIGH_VELOCITY: "4 transactions in 5 min",
