@@ -248,6 +248,11 @@ function sigClass(code) {
     "FIRST_TIME_PAYER",
     "BIN_PATTERN",
     "NEW_DEVICE",
+    "FOREIGN_CARD",
+    "PREPAID_CARD",
+    "BEHAVIOUR_MISMATCH",
+    "HIGH_VALUE_NEW",
+    "STAT_ANOMALY",
   ];
   if (critical.includes(code)) return "sig-c";
   if (warning.includes(code)) return "sig-w";
@@ -671,6 +676,12 @@ function generateReport(ref) {
     BEHAVIOUR_MISMATCH:
       "Sudden jump from small habitual amounts to a large payment",
     HIGH_VALUE_NEW: "First-time customer with an unusually high payment amount",
+    FOREIGN_CARD: "Card BIN identified as issued outside Nigeria",
+    PREPAID_CARD: "Prepaid card — elevated chargeback risk in Nigerian e-commerce",
+    UNKNOWN_BIN: "Card BIN not found in issuer database — origin unverifiable",
+    STAT_ANOMALY: "Amount is more than 2 standard deviations above customer average",
+    ML_HIGH_RISK: "Isolation Forest ML model: high fraud probability",
+    ML_MEDIUM_RISK: "Isolation Forest ML model: elevated fraud risk",
   };
 
   const reasonsHtml = (t.codes || []).length
