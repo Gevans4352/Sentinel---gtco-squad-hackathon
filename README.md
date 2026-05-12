@@ -44,7 +44,7 @@ This reduces financial loss, improves trust in digital payments, and strengthens
 
 ## Solution
 
-Sentinel introduces a **hybrid AI fraud engine** that:
+Sentinel introduces a **hybrid AI fraud engine** that: 
 
 1. Listens to Squad payment webhooks in real time  
 2. Extracts behavioral + transactional features  
