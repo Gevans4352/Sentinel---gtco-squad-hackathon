@@ -16,8 +16,7 @@
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   </head>
   <body>
-
-    <!-- ── Squad Merchant Setup Screen ───────────────────────────────────── -->
+    <!--Squad Merchant Setup Screen -->
     <div id="setup-screen" style="display:none">
       <div class="setup-bg"></div>
       <div class="setup-wrap">
@@ -62,29 +61,19 @@
             </div>
             <div id="setup-error" class="setup-error" style="display:none"></div>
           </div>
-
-          <!-- CTA -->
           <button id="setup-btn" class="setup-btn" onclick="verifyAndActivate()">
             <span id="setup-btn-text">Verify &amp; Activate Sentinel</span>
             <span id="setup-btn-spinner" class="setup-spinner" style="display:none"></span>
           </button>
-
           <p class="setup-hint">Sandbox and live keys are both accepted. Your key is stored locally and never shared.</p>
-
-          <!-- Divider -->
           <div class="setup-divider"><span>or</span></div>
-
-          <!-- Demo mode -->
           <button class="setup-demo-btn" onclick="activateDemoMode()">
             Continue in Demo Mode
           </button>
           <p class="setup-demo-note">Uses simulated transactions — no Squad account needed.</p>
-
         </div>
       </div>
     </div>
-    <!-- ─────────────────────────────────────────────────────────────────── -->
-
     <div class="noise"></div>
     <div class="grid-bg"></div>
     <header class="header">
@@ -186,8 +175,6 @@
         </div>
       </div>
     </header>
-
-    <!-- DEMO RIBBON -->
     <div class="demo-ribbon" id="demo-ribbon">
       <span class="ribbon-dot"></span>
       DEMO MODE — Simulated transactions active
@@ -249,7 +236,6 @@
               </div>
             </div>
           </div>
-
           <div class="sim-panel">
             <div class="sim-ey">Simulate</div>
             <div class="sim-row">
@@ -325,12 +311,9 @@
                 ✕
               </button>
             </div>
-            <!-- Quick Filters -->
             <div class="tag-cloud" id="tag-cloud">
               <span class="tag-cloud-label">Quick filters:</span>
-              <!-- Tags injected by JS -->
             </div>
-            <!-- Active filter pills -->
             <div
               class="active-filters"
               id="active-filters"
@@ -399,7 +382,6 @@
     <div id="settings-mount"></div>
     <div id="toasts"></div>
     <div id="modal-mount"></div>
-
     <script src="index.js"></script>
     <script src="simulate.js"></script>
   </body>
