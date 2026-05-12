@@ -1301,7 +1301,7 @@ function toggleDemoFromSettings(checkbox) {
   }
 }
 
-// ── Squad Merchant Setup ──────────────────────────────────────────────────────
+// Squad Merchant Setup 
 
 const STORAGE_KEY = 'sentinel_merchant';
 
@@ -1425,4 +1425,3 @@ function resetMerchantSetup() {
   localStorage.removeItem(STORAGE_KEY);
   location.reload();
 }
-// ─────────────────────────────────────────────────────────────────────────────
