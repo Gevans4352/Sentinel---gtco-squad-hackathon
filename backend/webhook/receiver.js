@@ -1,6 +1,8 @@
-const crypto = require('crypto');
-const scorer = require('../ai-engine/scorer');
-const squadApi = require('../squad-client/api');
+const crypto    = require('crypto');
+const scorer    = require('../ai-engine/scorer');
+const squadApi  = require('../squad-client/api');
+const binLookup = require('../bin-lookup');
+const { sendFraudAlert, trackAmberAndAlert } = require('../notifications/email');
 
 /**
  * Handles every inbound Squad payment webhook.
@@ -67,9 +69,17 @@ async function receiveWebhook(req, res, db, io) {
       return res.status(200).json({ message: 'Already processed' });
     }
 
-    // ── Step 4: Score ─────────────────────────────────────────────────────────
+    // ── Step 4: BIN enrichment + Score ───────────────────────────────────────
+    const bin_info = binLookup.lookupBin(card_bin);
+    if (bin_info) {
+      const origin = bin_info.is_nigerian ? 'Nigerian' : `Foreign (${bin_info.country})`;
+      console.log(`[BIN] ${card_bin} → ${bin_info.bank || bin_info.brand} · ${bin_info.type} · ${origin}`);
+    } else {
+      console.log(`[BIN] ${card_bin} → Unknown BIN`);
+    }
+
     const { score, tier, reasons, features } = scorer.scoreTransaction(
-      { amount, email, card_bin, timestamp: transaction_date },
+      { amount, email, card_bin, timestamp: transaction_date, bin_info },
       db
     );
 
@@ -78,28 +88,37 @@ async function receiveWebhook(req, res, db, io) {
       tier === 'GREEN' ? 'approved' : tier === 'AMBER' ? 'flagged' : 'refunded';
 
     await db.saveTransaction({
-      ref: transaction_ref,
+      ref:         transaction_ref,
       email,
       amount,
       card_bin,
+      bin_info,
       score,
       tier,
       reasons,
       features,
-      timestamp: transaction_date,
+      timestamp:   transaction_date,
       action_taken,
     });
 
     // ── Step 6: Act (fire and forget) ─────────────────────────────────────────
-    if (tier === 'AMBER') squadApi.verifyTransaction(transaction_ref).catch(console.error);
-    if (tier === 'RED')   squadApi.refundTransaction(transaction_ref, amount).catch(console.error);
+    if (tier === 'AMBER') {
+      squadApi.verifyTransaction(transaction_ref).catch(console.error);
+      trackAmberAndAlert({ ref: transaction_ref, email, amount, score, reasons, bin_info, timestamp: transaction_date }).catch(console.error);
+    }
+    if (tier === 'RED') {
+      squadApi.refundTransaction(transaction_ref, amount).catch(console.error);
+      sendFraudAlert({ ref: transaction_ref, email, amount, score, tier, reasons, bin_info, card_bin, timestamp: transaction_date }).catch(console.error);
+    }
 
     // ── Step 7: Push to dashboard ─────────────────────────────────────────────
     console.log(`[Webhook] Scored: ref=${transaction_ref} score=${score} tier=${tier}`);
     io.emit('new_transaction', {
-      ref: transaction_ref,
+      ref:      transaction_ref,
       email,
       amount,
+      card_bin,
+      bin_info,
       score,
       tier,
       reasons,

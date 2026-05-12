@@ -36,6 +36,10 @@ const RSN = {
 
 //BOOT
 document.addEventListener("DOMContentLoaded", () => {
+  checkMerchantSetup(); // show onboarding if not yet connected
+});
+
+function _initDashboard() {
   S.transactions = [...SEED];
   S.disputes = [...SEED_DSP];
   renderFeed();
@@ -50,7 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSocket();
   startDemo();
   hydrateFromDB();
-});
+}
 
 function hydrateFromDB() {
   fetch("/api/transactions")
@@ -96,10 +100,12 @@ function hydrateFromDB() {
         renderFeed();
         syncKPIs();
         updateNotifBadge();
+
       }
     })
     .catch(() => {});
 }
+
 
 //SIDEBAR TOGGLE
 function toggleSidebar() {
@@ -616,6 +622,16 @@ function openModal(ref) {
             </div>
           </div>` : ""}
           ${feats ? `<div><div class="m-sec-lbl">Feature Deviations</div>${feats}</div>` : ""}
+          ${t.tier === 'RED' ? `<div><div class="m-sec-lbl">Fraudster Profile</div><div style="background:#0b0b0b;border-left:3px solid var(--crimson);border-radius:4px;padding:14px 16px;font-family:var(--ff-mono);font-size:11px;line-height:2;">
+            <div style="color:var(--crimson);letter-spacing:.08em;margin-bottom:8px">■ FRAUDSTER PROFILE</div>
+            <div style="border-bottom:1px solid #1e293b;margin-bottom:10px;"></div>
+            <div><span style="color:var(--crimson);display:inline-block;width:72px">Operates:</span><span style="color:var(--t2)">${(t.codes||[]).includes('OFF_HOURS') ? 'Between 2am–4am WAT' : 'During business hours'}</span></div>
+            <div><span style="color:var(--crimson);display:inline-block;width:72px">Identity:</span><span style="color:var(--t2)">${(t.codes||[]).includes('FIRST_TIME_PAYER') ? 'Uses new email addresses' : 'Known customer account'}</span></div>
+            <div><span style="color:var(--crimson);display:inline-block;width:72px">Method:</span><span style="color:var(--t2)">${(t.codes||[]).includes('HIGH_VELOCITY') ? 'Rapid card testing — multiple attempts' : 'Single attempt'}</span></div>
+            <div><span style="color:var(--crimson);display:inline-block;width:72px">Card:</span><span style="color:var(--t2)">${(t.codes||[]).includes('BIN_PATTERN') ? 'BIN linked to multiple identities' : 'Single card use'}</span></div>
+            <div><span style="color:var(--crimson);display:inline-block;width:72px">Pattern:</span><span style="color:var(--t2)">${(t.codes||[]).includes('ROUND_AMOUNT') ? 'Tests with round amounts' : 'Realistic spend pattern'}</span></div>
+            <div style="border-top:1px solid #1e293b;margin-top:10px;padding-top:10px;"><span style="color:var(--crimson);display:inline-block;width:72px">Risk:</span><span style="color:var(--t2)">Score ${t.score}/100 — ${(t.codes||[]).length} signal${(t.codes||[]).length !== 1 ? 's' : ''} detected</span></div>
+          </div></div>` : ''}
           <div><div class="m-sec-lbl">Raw Payload</div><div class="raw">${JSON.stringify(t, null, 2)}</div></div>
         </div>
         <div class="modal-acts">${acts}</div>
@@ -1242,3 +1258,129 @@ function toggleDemoFromSettings(checkbox) {
     btn.textContent = "Enable";
   }
 }
+
+// ── Squad Merchant Setup ──────────────────────────────────────────────────────
+
+const STORAGE_KEY = 'sentinel_merchant';
+
+function checkMerchantSetup() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    try {
+      const info = JSON.parse(stored);
+      _applyMerchantBadge(info);
+      _initDashboard();
+      return;
+    } catch (_) {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+  document.getElementById('setup-screen').style.display = 'flex';
+}
+
+function toggleKeyVisibility() {
+  const input = document.getElementById('squad-key-input');
+  const icon  = document.getElementById('eye-icon');
+  const show  = input.type === 'password';
+  input.type  = show ? 'text' : 'password';
+  icon.style.opacity = show ? '1' : '0.4';
+}
+
+async function verifyAndActivate() {
+  const input = document.getElementById('squad-key-input');
+  const btn   = document.getElementById('setup-btn');
+  const text  = document.getElementById('setup-btn-text');
+  const spin  = document.getElementById('setup-btn-spinner');
+  const err   = document.getElementById('setup-error');
+
+  const key = input.value.trim();
+  err.style.display = 'none';
+
+  if (!key) { _setupError('Please paste your Squad API key.'); input.focus(); return; }
+  if (key.length < 20) { _setupError("That doesn't look like a valid Squad key — it's too short."); return; }
+
+  btn.disabled = true;
+  text.style.display = 'none';
+  spin.style.display = 'inline-block';
+
+  try {
+    const res  = await fetch('/api/verify-merchant', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ api_key: key }),
+    });
+    const data = await res.json();
+
+    if (!res.ok || !data.valid) {
+      _setupError(data.error || 'Verification failed — check your key and try again.');
+      return;
+    }
+
+    const info = {
+      business_name: data.business_name || 'Squad Merchant',
+      environment:   data.environment   || 'sandbox',
+      connected_at:  new Date().toISOString(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(info));
+    _showSuccess(info);
+
+  } catch (_) {
+    _setupError('Network error — make sure the Sentinel server is running.');
+  } finally {
+    btn.disabled = false;
+    text.style.display = 'inline';
+    spin.style.display = 'none';
+  }
+}
+
+function activateDemoMode() {
+  const info = { business_name: 'Demo Mode', environment: 'demo', connected_at: new Date().toISOString() };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(info));
+  _launchDashboard(info);
+}
+
+function _setupError(msg) {
+  const el = document.getElementById('setup-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('squad-key-input').focus();
+}
+
+function _showSuccess(info) {
+  const btn  = document.getElementById('setup-btn');
+  const text = document.getElementById('setup-btn-text');
+  btn.style.background = '#2ed573';
+  btn.style.color = '#0c0c0e';
+  text.textContent = 'Verified — Welcome, ' + info.business_name;
+  text.style.display = 'inline';
+  setTimeout(() => _launchDashboard(info), 1200);
+}
+
+function _launchDashboard(info) {
+  const screen = document.getElementById('setup-screen');
+  screen.style.transition = 'opacity .4s';
+  screen.style.opacity = '0';
+  setTimeout(() => {
+    screen.style.display = 'none';
+    _applyMerchantBadge(info);
+    _initDashboard();
+  }, 400);
+}
+
+function _applyMerchantBadge(info) {
+  const badge = document.getElementById('merchant-badge');
+  if (!badge) return;
+  if (info.environment === 'demo') {
+    badge.textContent = 'Demo Mode';
+    badge.className   = 'logo-sub merchant-demo';
+  } else {
+    badge.textContent = info.business_name + ' · Squad Verified \u2713';
+    badge.className   = 'logo-sub merchant-verified';
+  }
+}
+
+function resetMerchantSetup() {
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+// ─────────────────────────────────────────────────────────────────────────────

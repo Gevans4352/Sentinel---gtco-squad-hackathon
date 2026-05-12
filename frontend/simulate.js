@@ -52,13 +52,55 @@ let _amberIdx = 0;
 function _badEmail()   { return BAD_EMAILS[_badIdx++   % BAD_EMAILS.length];   }
 function _amberEmail() { return AMBER_EMAILS[_amberIdx++ % AMBER_EMAILS.length]; }
 
-// Card BINs (Visa / Mastercard / Verve)
-// GREEN  → known-good personal/corporate cards
-// AMBER  → prepaid or recently-seen high-risk BINs
-// RED    → BINs associated with test/stolen card patterns
-const BINS_GREEN = ['411111','451273','476148','428616','435592','438857','462203'];
-const BINS_AMBER = ['539983','527841','521456','545501','512345','530956','556084'];
-const BINS_RED   = ['400000','490116','402918','401177','403245','400115','492950'];
+// Card BINs — real Nigerian-issued BINs from the BIN database
+// GREEN  → legitimate Nigerian debit/credit cards from major banks
+//          small mix of foreign (Nigerians abroad, PayPal/foreign cards are legit)
+// AMBER  → Nigerian credit or lesser-known BINs worth reviewing
+// RED    → foreign BINs used in card-fraud patterns on Nigerian merchants
+const BINS_GREEN = [
+  '420320', // GTBank Visa Debit
+  '407127', // Zenith Visa Debit
+  '407591', // UBA Visa Debit
+  '418742', // Access Visa Debit
+  '514585', // Zenith Mastercard Debit
+  '518304', // Zenith Mastercard Debit
+  '519899', // Zenith Mastercard Debit
+  '521958', // Zenith Mastercard Debit
+  '519904', // Zenith Mastercard Debit
+  '404905', // UBA Visa Credit
+  '412053', // Zenith Visa Debit
+  '413103', // Zenith Visa Debit
+  '419760', // Zenith Visa Debit
+  '419762', // Zenith Visa Debit
+  '403660', // Access Bank Visa
+  '420319', // GTBank Visa Credit
+];
+const BINS_AMBER = [
+  '512269', // Ecobank Mastercard Credit
+  '512450', // Ecobank Mastercard Credit
+  '513469', // Zenith Mastercard Credit
+  '515803', // Zenith Mastercard Credit
+  '521623', // Intercontinental Mastercard Credit
+  '521982', // Zenith Mastercard Credit
+  '400066', // Intercontinental Visa Credit
+  '408378', // Zenith Visa Credit
+  '408407', // Zenith Visa Credit
+  '419225', // Skye Bank Visa Credit
+  '420358', // UBA Visa Credit
+  '512336', // Zenith Mastercard Credit
+];
+const BINS_RED = [
+  '411111', // JPMorgan Chase (US) — common in card testing
+  '400000', // Generic Visa (US) — used in BIN attacks
+  '438857', // Chase Bank USA
+  '462203', // Generic US Visa
+  '476148', // Yamagin Credit Japan
+  '403245', // Banco Citicard Brazil
+  '400115', // Barclays UK
+  '545501', // NatWest UK Mastercard
+  '490116', // Generic Visa
+  '492950', // Generic Visa
+];
 
 // Amounts (in kobo — 1 NGN = 100 kobo)
 // GREEN:  ₦1,200 – ₦45,000  (everyday POS / e-commerce)
@@ -77,49 +119,34 @@ const AMOUNTS_RED = [
   38000000, 42000000, 45000000, 48000000, 50000000,
 ];
 
-// Timestamp helpers 
-
-function _isoAt(hour) {
-  const d = new Date();
-  d.setHours(hour, _rand(0, 59), _rand(0, 59), 0);
-  return d.toISOString();
-}
-
 //Exported simulate functions 
 
 function simulateGreen() {
-  // Normal daytime purchase: 9 AM – 6 PM, sensible amount, recognised card.
-  // Fresh random email each time — no history = no red flags (correct behaviour).
   _post({
     transaction_ref:  _ref(),
     amount:           _pick(AMOUNTS_GREEN),
     email:            _email(),
     card_bin:         _pick(BINS_GREEN),
-    transaction_date: _isoAt(_rand(9, 18)),
+    transaction_date: new Date().toISOString(),
   });
 }
 
 function simulateAmber() {
-  // Late-evening, above-average amount, cycles through a small fixed email pool
-  // so HIGH_VELOCITY and AMOUNT_SPIKE fire after a few clicks.
   _post({
     transaction_ref:  _ref(),
     amount:           _pick(AMOUNTS_AMBER),
     email:            _amberEmail(),
     card_bin:         _pick(BINS_AMBER),
-    transaction_date: _isoAt(_rand(20, 23)),
+    transaction_date: new Date().toISOString(),
   });
 }
 
 function simulateRed() {
-  // Very early morning (1–4 AM), very high amount, risky BIN.
-  // Cycles through a small fixed pool of known-bad emails so the fraud signals
-  // (HIGH_VELOCITY, BEHAVIOUR_MISMATCH, AMOUNT_SPIKE) accumulate with each hit.
   _post({
     transaction_ref:  _ref(),
     amount:           _pick(AMOUNTS_RED),
     email:            _badEmail(),
     card_bin:         _pick(BINS_RED),
-    transaction_date: _isoAt(_rand(1, 4)),
+    transaction_date: new Date().toISOString(),
   });
 }

@@ -4,9 +4,10 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
-const db = require('./db/database');
+const db        = require('./db/database');
 const { receiveWebhook } = require('./webhook/receiver');
-const squadApi = require('./squad-client/api');
+const squadApi  = require('./squad-client/api');
+const binLookup = require('./bin-lookup');
 
 // ── Global safety net — prevents any single unhandled error from killing the process ──
 process.on('uncaughtException',  (err) => console.error('[Sentinel] uncaughtException:', err.message));
@@ -44,6 +45,29 @@ app.get('/api/transactions', async (req, res) => {
   } catch (err) {
     console.error('[API] /api/transactions error:', err.message);
     res.status(500).json({ error: 'Failed to fetch transactions' });
+  }
+});
+
+// BIN lookup — used by frontend to enrich card display
+app.get('/api/bin/:bin', (req, res) => {
+  const info = binLookup.lookupBin(req.params.bin);
+  if (!info) return res.status(404).json({ error: 'BIN not found', bin: req.params.bin });
+  res.json(info);
+});
+
+// Squad merchant verification — validates an API key against Squad's live API
+app.post('/api/verify-merchant', async (req, res) => {
+  const { api_key } = req.body;
+  if (!api_key || typeof api_key !== 'string' || api_key.trim().length < 10)
+    return res.status(400).json({ valid: false, error: 'Please enter a valid API key.' });
+
+  try {
+    const result = await squadApi.verifyMerchantKey(api_key);
+    console.log(`[Merchant] Verification attempt — valid=${result.valid} env=${result.environment || '?'}`);
+    res.status(result.valid ? 200 : 401).json(result);
+  } catch (err) {
+    console.error('[Merchant] verify error:', err.message);
+    res.status(500).json({ valid: false, error: 'Verification failed — try again.' });
   }
 });
 
