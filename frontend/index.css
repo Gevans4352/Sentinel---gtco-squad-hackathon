@@ -2093,11 +2093,27 @@ body {
   border-radius: 2px;
 }
 
-/* ═══════════════════════════════════════════════
-   RESPONSIVE DESIGN - PRODUCTION GRADE
-   ═══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  :root {
+    --sw: 220px;
+  }
+  .sidebar-inner {
+    width: var(--sw);
+  }
+  .kpi-num {
+    font-size: 30px;
+  }
+  .chart-wrap {
+    height: 180px;
+  }
+  .panel-hd {
+    padding: 11px 18px;
+  }
+  .page-container {
+    padding: 18px 14px 22px;
+  }
+}
 
-/* ── TABLET & MOBILE (≤ 768px) ── */
 @media (max-width: 768px) {
   :root {
     font-size: 12px;
@@ -2105,8 +2121,6 @@ body {
     --rh: 26px;
     --sw: 260px;
   }
-
-  /* Header */
   .header {
     padding: 0 12px;
     gap: 10px;
@@ -2139,8 +2153,6 @@ body {
   .merchant-chip {
     display: none;
   }
-
-  /* Demo ribbon */
   .demo-ribbon {
     padding: 0 12px;
     font-size: 9px;
@@ -2149,8 +2161,6 @@ body {
     font-size: 8px;
     padding: 2px 8px;
   }
-
-  /* Sidebar - mobile slide */
   .sidebar {
     position: fixed;
     top: calc(var(--hh) + var(--rh));
@@ -2168,8 +2178,6 @@ body {
   .sidebar.collapsed {
     transform: translateX(-100%);
   }
-
-  /* KPI */
   .kpi {
     padding: 12px 16px;
   }
@@ -2182,8 +2190,6 @@ body {
   .kpi-sep {
     margin: 0 16px;
   }
-
-  /* Sim panel */
   .sim-panel {
     padding: 12px 16px 16px;
   }
@@ -2191,8 +2197,6 @@ body {
     font-size: 8px;
     padding: 6px 0;
   }
-
-  /* Content panels */
   .panel-hd {
     padding: 10px 14px;
   }
@@ -2202,8 +2206,6 @@ body {
   .panel-meta {
     font-size: 9px;
   }
-
-  /* Chart */
   .chart-wrap {
     padding: 12px 14px 16px;
     height: 160px;
@@ -2212,8 +2214,6 @@ body {
     gap: 12px;
     font-size: 8px;
   }
-
-  /* Table */
   .tbl {
     font-size: 11px;
     min-width: 580px;
@@ -2248,16 +2248,12 @@ body {
     font-size: 8px;
     padding: 3px 8px;
   }
-
-  /* Toasts */
   .toast {
     min-width: 220px;
     max-width: 280px;
     font-size: 11px;
     padding: 10px 14px;
   }
-
-  /* Notification panel */
   .notif-panel {
     position: fixed;
     top: calc(var(--hh) + 8px);
@@ -2269,8 +2265,6 @@ body {
   .notif-list {
     max-height: calc(100vh - 180px);
   }
-
-  /* Modal */
   .modal {
     max-width: 92vw;
   }
@@ -2302,8 +2296,6 @@ body {
   .m-ref-val {
     font-size: 13px;
   }
-
-  /* Settings modal */
   .sm {
     max-width: 92vw;
   }
@@ -2316,8 +2308,6 @@ body {
   .sm-foot {
     padding: 12px 18px;
   }
-
-  /* Setup screen */
   .setup-card {
     padding: 32px 28px 26px;
   }
@@ -2331,11 +2321,63 @@ body {
   .setup-p {
     font-size: 11px;
   }
+  .page-container {
+    padding: 16px 12px 20px;
+  }
+  .search-bar-wrap {
+    padding: 8px 12px;
+  }
+  .search-bar-input,
+  .setup-input {
+    font-size: 16px;
+  }
+  .tag-cloud {
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .tag-chip {
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+  .active-filters {
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+  #disputes-body,
+  .tbl-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
-/* ── SMALL PHONES (≤ 480px) ── */
+@media (max-width: 640px) {
+  .modal {
+    max-width: 95vw;
+  }
+  .gauge {
+    width: 58px;
+    height: 58px;
+  }
+  .gauge-sc {
+    font-size: 18px;
+  }
+  .i2col {
+    gap: 6px;
+  }
+  .modal-top {
+    padding: 16px 18px 12px;
+  }
+  .modal-body {
+    padding: 14px 18px;
+    gap: 14px;
+  }
+  .search-bar-wrap {
+    padding: 8px 12px;
+    border-radius: 8px;
+  }
+}
+
 @media (max-width: 480px) {
-  /* Notification panel */
   .notif-panel {
     top: calc(var(--hh) + 6px);
     right: 8px;
@@ -2344,8 +2386,6 @@ body {
   .notif-list {
     max-height: calc(100vh - 160px);
   }
-
-  /* Modal */
   .modal-overlay {
     padding: 12px;
   }
@@ -2363,8 +2403,6 @@ body {
     font-size: 8px;
     padding: 2px 6px;
   }
-
-  /* Setup screen */
   .setup-wrap {
     padding: 12px;
   }
@@ -2409,9 +2447,28 @@ body {
   .setup-demo-note {
     font-size: 9px;
   }
+  .page-container {
+    padding: 12px 10px 16px;
+  }
+  .modal-acts {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mb {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+  .search-bar-input,
+  .setup-input {
+    font-size: 16px;
+  }
+  .af-pill {
+    font-size: 10px;
+    padding: 3px 10px;
+  }
 }
 
-/* ── VERY SMALL PHONES (≤ 400px) ── */
 @media (max-width: 400px) {
   :root {
     font-size: 11px;
@@ -2419,8 +2476,6 @@ body {
     --rh: 24px;
     --sw: 240px;
   }
-
-  /* Header */
   .header {
     padding: 0 10px;
     gap: 8px;
@@ -2449,8 +2504,6 @@ body {
     font-size: 8px;
     padding: 2px 6px;
   }
-
-  /* Demo ribbon */
   .demo-ribbon {
     padding: 0 10px;
     font-size: 8px;
@@ -2460,8 +2513,6 @@ body {
     font-size: 7px;
     padding: 1px 6px;
   }
-
-  /* KPI */
   .kpi {
     padding: 10px 14px;
   }
@@ -2478,8 +2529,6 @@ body {
   .kpi-sep {
     margin: 0 14px;
   }
-
-  /* Sim panel */
   .sim-panel {
     padding: 10px 14px 14px;
   }
@@ -2491,8 +2540,6 @@ body {
     padding: 5px 0;
     letter-spacing: 0.5px;
   }
-
-  /* Content panels */
   .panel-hd {
     padding: 8px 12px;
   }
@@ -2507,8 +2554,6 @@ body {
     font-size: 8px;
     padding: 2px 6px;
   }
-
-  /* Chart */
   .chart-wrap {
     padding: 10px 12px 14px;
     height: 140px;
@@ -2521,8 +2566,6 @@ body {
     width: 5px;
     height: 5px;
   }
-
-  /* Table */
   .tbl {
     font-size: 10px;
     min-width: 520px;
@@ -2564,8 +2607,6 @@ body {
     font-size: 7px;
     padding: 2px 6px;
   }
-
-  /* Toasts */
   #toasts {
     bottom: 10px;
     right: 10px;
@@ -2579,8 +2620,6 @@ body {
     font-size: 10px;
     padding: 9px 12px;
   }
-
-  /* Notification panel */
   .notif-panel {
     right: 6px;
     left: 6px;
@@ -2594,8 +2633,6 @@ body {
   .notif-meta {
     font-size: 11px;
   }
-
-  /* Modal */
   .modal-overlay {
     padding: 8px;
   }
@@ -2677,8 +2714,6 @@ body {
   .evid-body {
     font-size: 10px;
   }
-
-  /* Settings modal */
   .sm-overlay {
     padding: 8px;
   }
@@ -2730,8 +2765,6 @@ body {
     padding: 6px 14px;
     font-size: 9px;
   }
-
-  /* Setup screen */
   .setup-wrap {
     padding: 8px;
   }
@@ -2762,6 +2795,129 @@ body {
   }
   .setup-divider {
     margin: 18px 0 16px;
+  }
+  .page-container {
+    padding: 10px 8px 14px;
+  }
+  .search-bar-wrap {
+    padding: 6px 10px;
+    border-radius: 8px;
+  }
+  .search-bar-input {
+    font-size: 16px;
+  }
+  .tag-chip {
+    padding: 3px 8px;
+    font-size: 9px;
+  }
+  .active-filters {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .af-pill {
+    font-size: 10px;
+    padding: 3px 10px;
+  }
+  .gauge {
+    width: 52px;
+    height: 52px;
+    border-width: 2px;
+  }
+  .gauge-sc {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .sidebar {
+    max-height: 100%;
+    overflow-y: auto;
+  }
+  .sidebar-inner {
+    height: auto;
+    min-height: 100%;
+  }
+  .kpi-stack {
+    padding-top: 8px;
+  }
+  .kpi {
+    padding: 8px 14px;
+  }
+  .kpi-num {
+    font-size: 22px;
+  }
+  .sim-panel {
+    padding: 10px 14px 12px;
+  }
+  .chart-wrap {
+    height: 130px;
+    padding: 8px 12px 10px;
+  }
+  .modal {
+    max-height: 85vh;
+  }
+  .modal-body {
+    gap: 10px;
+    padding: 10px 14px;
+  }
+  .notif-panel {
+    max-height: 80vh;
+  }
+  .notif-list {
+    max-height: calc(80vh - 60px);
+  }
+  .page-container {
+    padding: 10px 12px 14px;
+  }
+}
+
+@media (pointer: coarse) {
+  .icon-btn,
+  .toggle-btn,
+  .tbl-btn,
+  .mb,
+  .sim-btn,
+  .tag-chip,
+  .setup-btn,
+  .setup-demo-btn,
+  .setup-eye,
+  .m-x,
+  .sm-x,
+  .sm-save,
+  .sm-cancel,
+  .demo-ribbon button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .tbl td {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+  .notif-item {
+    padding: 16px;
+  }
+  .search-bar-wrap {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .kpi-bump,
+  .slide-in,
+  .toast,
+  .modal,
+  .notif-panel,
+  .active-filters {
+    animation: none !important;
+    box-shadow: none !important;
   }
 }
 

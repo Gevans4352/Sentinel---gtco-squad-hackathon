@@ -227,6 +227,8 @@ function sigClass(code) {
     "ML_HIGH_RISK",
     "ROUND_AMOUNT",
     "UNKNOWN_BIN",
+    "FOREIGN_CARD"
+
   ];
   const warning = [
     "AMOUNT_SPIKE",
@@ -249,6 +251,7 @@ function renderFeed() {
   document.getElementById("feed-meta").textContent =
     `${Math.min(S.transactions.length, 50)} transactions`;
 }
+
 //FILTER ENGINE
 
 function filterFeed() {
@@ -602,7 +605,7 @@ function openModal(ref) {
               <div class="ibox"><div class="ibox-lbl">Time</div><div class="ibox-val">${t.time || fmtTime(t.timestamp)}</div></div>
               <div class="ibox"><div class="ibox-lbl">Customer</div><div class="ibox-val">${t.email}</div></div>
               <div class="ibox"><div class="ibox-lbl">Card</div><div class="ibox-val">${t.bin_info?.bank ? `${t.bin_info.bank} · ${t.bin_info.brand} ${t.bin_info.type}` : (t.card_bin || '—')}</div></div>
-              <div class="ibox"><div class="ibox-lbl">Card Origin</div><div class="ibox-val" style="color:${!t.bin_info ? 'var(--t3)' : t.bin_info.is_nigerian ? 'var(--jade)' : 'var(--amber)'}">${!t.bin_info ? '— Unknown' : t.bin_info.is_nigerian ? `🇳🇬 Nigerian (${t.bin_info.country})` : `🌍 Foreign (${t.bin_info.country})`}</div></div>
+              <div class="ibox"><div class="ibox-lbl">Card Origin</div><div class="ibox-val" style="color:${!t.bin_info ? 'var(--t3)' : t.bin_info.is_nigerian ? 'var(--jade)' : 'var(--amber)'}">${!t.bin_info ? '— Unknown' : t.bin_info.is_nigerian ? `🇳🇬 Nigerian (${t.bin_info.country})` : `Foreign (${t.bin_info.country})`}</div></div>
               <div class="ibox"><div class="ibox-lbl">Status</div><div class="ibox-val">${(t.status || (t.tier === "GREEN" ? "approved" : t.tier === "AMBER" ? "flagged" : "blocked")).toUpperCase()}</div></div>
           </div></div>
           <div>
