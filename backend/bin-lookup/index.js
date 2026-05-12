@@ -29,30 +29,43 @@ function parseCSVLine(line) {
   return fields;
 }
 
-// ── Load CSV into memory ──────────────────────────────────────────────────────
+// ── Load BIN data into memory ─────────────────────────────────────────────────
+// Prefer the full CSV (339k records) when present; fall back to the committed
+// slim JSON (Nigerian BINs + all simulate.js BINs) so the app works out of the box.
+const SLIM_PATH = path.join(__dirname, 'bins_slim.json');
 const binMap = new Map();
 
+let loaded = false;
+
+// Try full CSV first
 try {
   const lines = fs.readFileSync(CSV_PATH, 'utf8').split('\n');
-  // Skip header row (index 0)
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
-
     const [bin, brand, type, category, issuer, alpha2] = parseCSVLine(line);
     if (!bin || !/^\d{5,8}$/.test(bin)) continue;
-
     binMap.set(bin.slice(0, 6), {
-      brand:   (brand    || '').toUpperCase(),
-      type:    (type     || '').toUpperCase(),
-      category:(category || '').toUpperCase(),
-      bank:    issuer    || '',
-      country: (alpha2   || '').toUpperCase(),
+      brand:    (brand    || '').toUpperCase(),
+      type:     (type     || '').toUpperCase(),
+      category: (category || '').toUpperCase(),
+      bank:     issuer    || '',
+      country:  (alpha2   || '').toUpperCase(),
     });
   }
-  console.log(`[BIN] Loaded ${binMap.size.toLocaleString()} BIN records.`);
-} catch (err) {
-  console.warn('[BIN] Could not load binlist-data.csv:', err.message);
+  console.log(`[BIN] Loaded ${binMap.size.toLocaleString()} records from CSV.`);
+  loaded = true;
+} catch (_) {}
+
+// Fall back to slim JSON
+if (!loaded) {
+  try {
+    const slim = JSON.parse(fs.readFileSync(SLIM_PATH, 'utf8'));
+    for (const [key, val] of Object.entries(slim)) binMap.set(key, val);
+    console.log(`[BIN] Loaded ${binMap.size} records from slim fallback (bins_slim.json).`);
+  } catch (err) {
+    console.warn('[BIN] Could not load any BIN data:', err.message);
+  }
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
