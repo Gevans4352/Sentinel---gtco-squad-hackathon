@@ -62,6 +62,8 @@ function _initDashboard() {
   S.demoMode = isDemo;
   const ribbon = document.getElementById('demo-ribbon');
   if (ribbon) ribbon.style.display = isDemo ? 'flex' : 'none';
+  const simPanel = document.querySelector('.sim-panel');
+  if (simPanel) simPanel.style.display = isDemo ? '' : 'none';
   if (isDemo) startDemo();
 
   hydrateFromDB();
