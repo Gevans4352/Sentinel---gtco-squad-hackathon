@@ -18,6 +18,22 @@ function _post(payload) {
 function _pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
 function _rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
+function _capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+function _fullName() {
+  return _capitalize(_pick(FIRST)) + ' ' + _capitalize(_pick(LAST));
+}
+function _nameFromEmail(email) {
+  if (!email) return 'Unknown';
+  const local = email.split('@')[0];
+  return local
+    .replace(/[._0-9]/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase())
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 //Identity pools
 
 const FIRST = [
@@ -126,6 +142,7 @@ function simulateGreen() {
     transaction_ref:  _ref(),
     amount:           _pick(AMOUNTS_GREEN),
     email:            _email(),
+    name:             _fullName(), 
     card_bin:         _pick(BINS_GREEN),
     transaction_date: new Date().toISOString(),
   });
@@ -136,6 +153,7 @@ function simulateAmber() {
     transaction_ref:  _ref(),
     amount:           _pick(AMOUNTS_AMBER),
     email:            _amberEmail(),
+    name:             _nameFromEmail(email),
     card_bin:         _pick(BINS_AMBER),
     transaction_date: new Date().toISOString(),
   });
@@ -146,6 +164,7 @@ function simulateRed() {
     transaction_ref:  _ref(),
     amount:           _pick(AMOUNTS_RED),
     email:            _badEmail(),
+    name:             _nameFromEmail(email),
     card_bin:         _pick(BINS_RED),
     transaction_date: new Date().toISOString(),
   });
