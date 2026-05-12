@@ -226,6 +226,7 @@ function sigClass(code) {
     "GEO_MISMATCH",
     "ML_HIGH_RISK",
     "ROUND_AMOUNT",
+    "UNKNOWN_BIN",
   ];
   const warning = [
     "AMOUNT_SPIKE",
@@ -1200,8 +1201,8 @@ function toggleSettings() {
         </div>
         <div class="sm-row">
           <div class="sm-row-info">
-            <div class="sm-row-name">SMS Alerts</div>
-            <div class="sm-row-desc">Send SMS on RED transaction block</div>
+            <div class="sm-row-name">Email Alerts</div>
+            <div class="sm-row-desc">Send Email on RED transaction block</div>
           </div>
           <label class="tog"><input type="checkbox"/><span class="tog-t"></span></label>
         </div>
