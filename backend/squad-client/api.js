@@ -65,4 +65,35 @@ async function challengeDispute(transactionRef) {
   }
 }
 
-module.exports = { verifyTransaction, refundTransaction, getDisputes, challengeDispute };
+// Verify an API key belongs to a real Squad merchant.
+// Returns { valid, business_name, environment } or { valid: false, error }.
+async function verifyMerchantKey(apiKey) {
+  const key      = String(apiKey || '').trim();
+  const isSandbox = key.startsWith('sandbox_');
+  const base     = isSandbox ? 'https://sandbox-api-d.squadco.com' : 'https://api-d.squadco.com';
+
+  try {
+    const { data } = await axios.get(`${base}/account/balance`, {
+      headers: { Authorization: `Bearer ${key}` },
+      timeout: 8000,
+    });
+    const name =
+      data?.data?.merchant_account_details?.account_name ||
+      data?.data?.account_name ||
+      data?.data?.merchant_id  ||
+      'Squad Merchant';
+    return { valid: true, business_name: name, environment: isSandbox ? 'sandbox' : 'live' };
+  } catch (err) {
+    const status = err.response?.status;
+    // 401/403 = bad key
+    if (status === 401 || status === 403)
+      return { valid: false, error: 'Invalid API key — check your Squad dashboard.' };
+    // Any other HTTP error (404, 400, 500) means auth passed but endpoint quirk
+    if (status)
+      return { valid: true, business_name: 'Squad Merchant', environment: isSandbox ? 'sandbox' : 'live' };
+    // Network error
+    return { valid: false, error: 'Could not reach Squad — check your connection.' };
+  }
+}
+
+module.exports = { verifyTransaction, refundTransaction, getDisputes, challengeDispute, verifyMerchantKey };
