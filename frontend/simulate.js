@@ -77,49 +77,34 @@ const AMOUNTS_RED = [
   38000000, 42000000, 45000000, 48000000, 50000000,
 ];
 
-// Timestamp helpers 
-
-function _isoAt(hour) {
-  const d = new Date();
-  d.setHours(hour, _rand(0, 59), _rand(0, 59), 0);
-  return d.toISOString();
-}
-
 //Exported simulate functions 
 
 function simulateGreen() {
-  // Normal daytime purchase: 9 AM – 6 PM, sensible amount, recognised card.
-  // Fresh random email each time — no history = no red flags (correct behaviour).
   _post({
     transaction_ref:  _ref(),
     amount:           _pick(AMOUNTS_GREEN),
     email:            _email(),
     card_bin:         _pick(BINS_GREEN),
-    transaction_date: _isoAt(_rand(9, 18)),
+    transaction_date: new Date().toISOString(),
   });
 }
 
 function simulateAmber() {
-  // Late-evening, above-average amount, cycles through a small fixed email pool
-  // so HIGH_VELOCITY and AMOUNT_SPIKE fire after a few clicks.
   _post({
     transaction_ref:  _ref(),
     amount:           _pick(AMOUNTS_AMBER),
     email:            _amberEmail(),
     card_bin:         _pick(BINS_AMBER),
-    transaction_date: _isoAt(_rand(20, 23)),
+    transaction_date: new Date().toISOString(),
   });
 }
 
 function simulateRed() {
-  // Very early morning (1–4 AM), very high amount, risky BIN.
-  // Cycles through a small fixed pool of known-bad emails so the fraud signals
-  // (HIGH_VELOCITY, BEHAVIOUR_MISMATCH, AMOUNT_SPIKE) accumulate with each hit.
   _post({
     transaction_ref:  _ref(),
     amount:           _pick(AMOUNTS_RED),
     email:            _badEmail(),
     card_bin:         _pick(BINS_RED),
-    transaction_date: _isoAt(_rand(1, 4)),
+    transaction_date: new Date().toISOString(),
   });
 }
