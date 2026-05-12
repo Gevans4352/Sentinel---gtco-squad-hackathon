@@ -291,28 +291,27 @@ function applyFilter(q) {
   let visible = 0;
 
   rows.forEach((row) => {
-    const emailCell = row.querySelector(".tc-email");
-    const signalsCell = row.querySelector("td:nth-child(7)");
-    const tierCell = row.querySelector("td:nth-child(6) .pill");
+    // Column layout: 1=Date 2=Time 3=Amount 4=Customer 5=Card 6=AIScore 7=Tier 8=Signals 9=Status 10=Action
+    const emailCell   = row.querySelector(".tc-email");
+    const cardCell    = row.querySelector(".tc-card");
+    const amtCell     = row.querySelector(".tc-amt");
+    const tierCell    = row.querySelector("td:nth-child(7) .pill");
+    const signalsCell = row.querySelector("td:nth-child(8)");
+    const statusCell  = row.querySelector("td:nth-child(9)");
 
-    // Email match
-    const emailMatch = emailCell && emailCell.textContent.toLowerCase().includes(q);
-
-    // Signal match
-    let signalMatch = false;
-    if (signalsCell) {
-      const signalSpans = signalsCell.querySelectorAll(".sig");
-      signalMatch = Array.from(signalSpans).some(s => 
-        s.textContent.toLowerCase().includes(q)
-      );
-    }
-
-    // Tier/status match
-    const tierMatch = tierCell && tierCell.textContent.toLowerCase().includes(q);
-    const statusCell = row.querySelector("td:nth-child(8)");
+    const emailMatch  = emailCell  && emailCell.textContent.toLowerCase().includes(q);
+    const cardMatch   = cardCell   && cardCell.textContent.toLowerCase().includes(q);
+    const amtMatch    = amtCell    && amtCell.textContent.toLowerCase().includes(q);
+    const tierMatch   = tierCell   && tierCell.textContent.toLowerCase().includes(q);
     const statusMatch = statusCell && statusCell.textContent.toLowerCase().includes(q);
 
-    const match = !q || emailMatch || signalMatch || tierMatch || statusMatch;
+    let signalMatch = false;
+    if (signalsCell) {
+      signalMatch = Array.from(signalsCell.querySelectorAll(".sig"))
+        .some(s => s.textContent.toLowerCase().includes(q));
+    }
+
+    const match = !q || emailMatch || cardMatch || amtMatch || tierMatch || signalMatch || statusMatch;
     row.style.display = match ? "" : "none";
     if (match) visible++;
   });
@@ -345,19 +344,23 @@ function clearActiveFilter() {
 }
 
 const POPULAR_TAGS = [
-  { label: "approved", color: "jade" },
-  { label: "flagged", color: "amber" },
-  { label: "blocked", color: "crimson" },
+  { label: "GREEN",    color: "jade",    field: "tier" },
+  { label: "AMBER",   color: "amber",   field: "tier" },
+  { label: "RED",     color: "crimson", field: "tier" },
+  { label: "approved", color: "jade",   field: "status" },
+  { label: "flagged",  color: "amber",  field: "status" },
+  { label: "blocked",  color: "crimson",field: "status" },
 ];
 
 function buildTagCloud() {
   const container = document.getElementById("tag-cloud");
   if (!container) return;
 
-  const counts = { approved: 0, flagged: 0, blocked: 0 };
+  const counts = { GREEN: 0, AMBER: 0, RED: 0, approved: 0, flagged: 0, blocked: 0 };
 
   S.transactions.forEach(t => {
-    if (counts[t.status] !== undefined) counts[t.status]++;
+    if (t.tier   && counts[t.tier]   !== undefined) counts[t.tier]++;
+    if (t.status && counts[t.status] !== undefined) counts[t.status]++;
   });
 
   const tagsHtml = POPULAR_TAGS.map(tag => {
@@ -504,8 +507,12 @@ function pushTransaction(t) {
   const tbody = document.getElementById("txn-body");
   const tmp = document.createElement("tbody");
   tmp.innerHTML = buildRow(t, true);
-  tbody.insertBefore(tmp.firstChild, tbody.firstChild);
+  const newRow = tmp.firstChild;
+  tbody.insertBefore(newRow, tbody.firstChild);
   if (tbody.rows.length > 50) tbody.deleteRow(tbody.rows.length - 1);
+  // If a filter is active, apply it to the new row immediately
+  const activeQ = document.getElementById("email-search")?.value.trim().toLowerCase() || "";
+  if (activeQ) applyFilter(activeQ);
   document.getElementById("feed-meta").textContent =
     `${Math.min(S.transactions.length, 50)} transactions`;
 
