@@ -36,7 +36,6 @@ const RSN = {
     "Squad's own risk engine independently flagged this transaction",
 };
 
-//BOOT
 document.addEventListener("DOMContentLoaded", () => {
   checkMerchantSetup(); // show onboarding if not yet connected
 });
@@ -142,7 +141,6 @@ function hydrateFromDB() {
     .catch(() => {});
 }
 
-//SIDEBAR TOGGLE
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("mob-overlay");
@@ -162,7 +160,6 @@ function toggleSidebar() {
   }, 320);
 }
 
-//NOTIFICATIONS
 function toggleNotifications() {
   const panel = document.getElementById("notif-panel");
   const isOpen = panel.classList.toggle("open");
@@ -239,7 +236,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-//UTILS
 const money = (n) => "₦" + (Number(n) / 100).toLocaleString();
 const scCol = (s) =>
   s < 31 ? "var(--jade)" : s < 71 ? "var(--amber)" : "var(--crimson)";
@@ -292,7 +288,6 @@ function emailToName(email) {
     .replace(/\s+/g, " ")
     .trim();
 }
-//FEED
 function renderFeed() {
   document.getElementById("txn-body").innerHTML = S.transactions
     .slice(0, 50)
@@ -302,7 +297,6 @@ function renderFeed() {
     `${Math.min(S.transactions.length, 50)} transactions`;
 }
 
-//FILTER ENGINE
 
 function filterFeed() {
   const q =
@@ -619,7 +613,6 @@ function bumpKPI(cardId, numId) {
   card.classList.add("kpi-bump");
 }
 
-//TOAST
 function showToast(t) {
   const rack = document.getElementById("toasts");
   const el = document.createElement("div");
@@ -634,7 +627,6 @@ function showToast(t) {
   setTimeout(() => el.remove(), t.tier === "RED" ? 5500 : 3000);
 }
 
-//MODAL
 function openModal(ref) {
   const t = S.transactions.find((x) => x.ref === ref);
   if (!t) return;
@@ -1110,7 +1102,6 @@ function submitEvidence(ref) {
   setTimeout(() => el.remove(), 3500);
 }
 
-//DISPUTES
 function renderDisputes() {
   document.getElementById("disputes-tbody").innerHTML = S.disputes
     .map(
@@ -1142,7 +1133,6 @@ function toggleDisputes() {
   chev.classList.toggle("up", hidden);
 }
 
-//CHART
 let chart;
 const CD = [
   18, 22, 15, 20, 35, 42, 28, 19, 30, 45, 38, 52, 48, 55, 40, 35, 62, 78, 55,
@@ -1228,7 +1218,6 @@ function nudgeChart(score) {
   chart.update("none");
 }
 
-//SOCKET
 function initSocket() {
   if (typeof io !== "undefined") {
     const socket = io();
@@ -1248,7 +1237,6 @@ function initSocket() {
   }
 }
 
-//DEMO
 function startDemo() {
   S.demoTimer = setInterval(() => {
     const r = Math.random();
@@ -1274,7 +1262,6 @@ function toggleDemo() {
   }
 }
 
-//SETTINGS MODAL
 function toggleSettings() {
   const mount = document.getElementById("settings-mount");
   if (mount.innerHTML) {
