@@ -23,7 +23,7 @@ Digital payments in Nigeria are growing rapidly, but fraud is growing just as fa
 
 - No real-time fraud scoring at the transaction level
 - No automated pre-fulfillment fraud blocking
-- Chargebacks detected too late — after money is already lost
+- Chargebacks detected too late after money is already lost
 - SMEs cannot afford enterprise fraud systems
 - No explainability — merchants don't know *why* a transaction was suspicious
 
@@ -68,7 +68,7 @@ Sentinel introduces a **3-stage hybrid AI engine** that:
 
 ### Squad Dual-Confirmation
 - Cross-references Squad's own `is_suspicious` flag
-- Surfaces `🚨 DUAL` when both Sentinel and Squad flag a transaction
+- Surfaces `DUAL` when both Sentinel and Squad flag a transaction
 - Surfaces `SENTINEL ONLY` when Sentinel catches what Squad missed
 - Gives merchants layered confidence in fraud decisions
 
