@@ -303,10 +303,10 @@ Then open `http://localhost:3000` in your browser.
 
 Sentinel shifts fraud detection from:
 
-> ❌ After-money-lost detection
+>  After-money-lost detection
 
 to:
 
-> ✅ Before-money-leaves prevention
+> Before-money-leaves prevention
 
 This reduces financial loss, improves merchant trust in digital payments, and brings enterprise-grade fraud intelligence to SMEs who cannot afford traditional fraud systems.
