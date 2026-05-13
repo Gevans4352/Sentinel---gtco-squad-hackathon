@@ -2905,7 +2905,7 @@ body {
   }
 }
 
-/* ── Setup / Onboarding Screen ─────────────────────────────────────────────── */
+/*Setup Screen*/
 #setup-screen {
   position: fixed;
   inset: 0;
@@ -3149,8 +3149,6 @@ body {
   color: var(--t3);
   text-align: center;
 }
-
-/* Merchant verified badge in header */
 .merchant-verified {
   color: var(--teal) !important;
 }
