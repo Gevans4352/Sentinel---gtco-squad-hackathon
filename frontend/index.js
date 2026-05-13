@@ -917,7 +917,7 @@ th { background: #f1f5f9; padding: 8px 12px; text-align: left; font-size: 10px; 
     <div class="sec-title">Summary</div>
     <div class="grid">
       <div class="card"><div class="card-lbl">Amount</div><div class="card-val">${fmtMoney(t.amount)}</div></div>
-      <div class="card"><div class="card-lbl">Customer</div><div class="card-val" style="font-size:13px">${t.email}</div></div>
+      <div class="card"><div class="card-lbl">Customer</div><div class="card-val" style="font-size:13px">${emailToName(t.email)}<br/><span style="font-size:11px;color:#64748b;font-weight:400">${t.email}</span></div></div>
       <div class="card"><div class="card-lbl">Time</div><div class="card-val" style="font-size:13px">${timeStr}</div></div>
       <div class="card"><div class="card-lbl">Decision</div><div class="card-val" style="color:${col}">${(t.status || t.tier).toUpperCase()}</div></div>
     </div>
